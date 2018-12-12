@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
+    <div>vue-elm</div>
     <router-view/>
   </div>
 </template>
