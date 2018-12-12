@@ -1,6 +1,5 @@
 # study-vue-elm
-
-> A Vue.js project
+此项目是按照bailicangdu所做开源项目编写,只为学习理解vue的使用，原开源项目<a href="https://github.com/bailicangdu/vue2-elm">点击这里<a/>
 
 ## Build Setup
 
