@@ -1,21 +1,26 @@
-const HelloWorld = conp =>
-  require.ensure([], () => conp(require('../components/HelloWorld')), 'home')
+// 路由的懒加载
+const home = r =>
+  require.ensure([], () => r(require('../page/home/home')), 'home')
 // 在此抛出一个routes配置,是一个数组
 export default [
   {
-    path: '/',
-    component: HelloWorld,
-    children: [
-      {
-        path: '',
-        redirect: '/HelloWorld',
-        name: 'HelloWorld'
-      },
-      {
-        path: '/HelloWorld',
-        component: HelloWorld,
-        name: 'HelloWorld'
-      }
-    ]
+    path: '',
+    redirect: '/home' // 路径为'',重定向
+  },
+  {
+    path: '/', // 默认进入home页面
+    component: home,
+    name: 'home',
+    meta: {
+      keepAlive: true // 设置组件是否缓存
+    }
+  },
+  {
+    path: '/home',
+    component: home,
+    name: 'home',
+    meta: {
+      keepAlive: true
+    }
   }
 ]

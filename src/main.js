@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import Router from 'vue-router'
 import routes from './router/index'
+import 'lib-flexible'
+import './assets/fonts/iconfont.css'
 
 Vue.config.productionTip = false
 Vue.use(Router)
