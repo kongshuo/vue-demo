@@ -29,7 +29,7 @@
 </template>
 <script>
 import headTop from '@/components/header/header'
-import api from '@/service/getData'
+import homeApi from '@/service/homeApi'
 export default {
   data () {
     return {
@@ -40,7 +40,12 @@ export default {
     headTop
   },
   created () {
-    api.cityGuess()
+    // 当前城市接口调用
+    homeApi.cityGuess().then(res => {
+      if (res.statusText === 'OK') {
+        this.cityGuess = res.data.name
+      }
+    })
   }
 }
 </script>

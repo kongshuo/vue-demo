@@ -19,32 +19,34 @@ let http = axios.create({
   ]
 })
 
-function apiAxios (method, url, params, response) {
-  http({
-    method: method,
-    url: url,
-    data: method === 'POST' || method === 'PUT' ? params : null,
-    params: method === 'GET' || method === 'DELETE' ? params : null
+function apiAxios (method, url, params) {
+  return new Promise((resolve, reject) => {
+    http({
+      method: method,
+      url: url,
+      data: method === 'POST' || method === 'PUT' ? params : null,
+      params: method === 'GET' || method === 'DELETE' ? params : null
+    })
+      .then(function (response) {
+        resolve(response)
+      })
+      .catch(function (err) {
+        reject(err)
+      })
   })
-    .then(function (res) {
-      response(res)
-    })
-    .catch(function (err) {
-      response(err)
-    })
 }
 
 export default {
-  get: function (url, params, response) {
-    return apiAxios('GET', url, params, response)
+  get: function (url, params) {
+    return apiAxios('GET', url, params)
   },
-  post: function (url, params, response) {
-    return apiAxios('POST', url, params, response)
+  post: function (url, params) {
+    return apiAxios('POST', url, params)
   },
-  put: function (url, params, response) {
-    return apiAxios('PUT', url, params, response)
+  put: function (url, params) {
+    return apiAxios('PUT', url, params)
   },
-  delete: function (url, params, response) {
-    return apiAxios('DELETE', url, params, response)
+  delete: function (url, params) {
+    return apiAxios('DELETE', url, params)
   }
 }
