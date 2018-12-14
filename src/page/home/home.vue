@@ -29,7 +29,7 @@
 </template>
 <script>
 import headTop from '@/components/header/header'
-import commonApi from '@/service/commonApi'
+import api from '@/service/getData'
 export default {
   data () {
     return {
@@ -40,9 +40,7 @@ export default {
     headTop
   },
   created () {
-    commonApi.cityGuess().then(res => {
-      this.cityGuess = res.name
-    })
+    api.cityGuess()
   }
 }
 </script>
