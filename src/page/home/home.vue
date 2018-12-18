@@ -1,8 +1,8 @@
 <template>
   <div class="location">
     <head-top>
-      <a href="javascript:;" slot="logo" class="logo left">ele.me</a>
-      <a href="javascript:;" slot="login" class="login right" @click="getdata">登录|注册</a>
+      <a href="javascript:;" slot="logo" class="logo left" @click="reload">ele.me</a>
+      <a href="javascript:;" slot="login" class="login right" @click="login">登录|注册</a>
     </head-top>
     <section class="location-content">
       <div class="now-city">
@@ -25,10 +25,12 @@
       </div>
       <div class="city-list">
         <ul class="topList">
-          <li v-for="(cityItem,key,index) of sortAfterCityAll" :key="index">
+          <li v-for="(cityItems,key,index) of sortAfterCityAll" :key="index">
               <h3>{{key==="A" ? "A (按字母排序)" : key}}</h3>
-              <ul class="childrenList">
-                <li></li>
+              <ul class="childrenList clearfix">
+                <li v-for="(cityItem,index) of cityItems" :key="index">
+                 <a href="javascript:;" class="ellipsis" :title="cityItem.name">{{cityItem.name}}</a>
+                </li>
               </ul>
           </li>
         </ul>
@@ -63,9 +65,17 @@ export default {
     getdata () {
       console.log(this.cityHot)
       console.log(this.cityAll)
+    },
+    // 点击logo刷新页面
+    reload () {
+      window.location.reload()
+    },
+    // 跳转到登录页
+    login () {
+      this.$router.push({path: '/login'})
     }
   },
-  created () {
+  activated () {
     // 当前城市接口调用
     homeApi.cityGuess().then(res => {
       if (res.statusText === 'OK') {
@@ -96,6 +106,7 @@ export default {
   .logo,.login{
     display: inline-block;
     height: 100%;
+    padding: 0 20px;
     line-height: 90px;
     font-size: 28px;
     color: #fff;
@@ -107,6 +118,7 @@ export default {
 }
 .now-city{
   margin-top: 20px;
+  background-color: #fff;
   p{
     height: 60px;
     line-height: 60px;
@@ -144,12 +156,14 @@ export default {
   margin-top: 20px;
   border-top: 2px solid #e4e4e4;/*no*/
   border-bottom: 1px solid #e4e4e4;/*no*/
+  background-color: #fff;
   .hot-city-title{
     height: 60px;
     line-height: 60px;
     padding: 0 20px;
     font-size: 26px;
     color: #666;
+    border-bottom: 1px solid #e4e4e4;/*no*/
   }
   li{
     float: left;
@@ -170,5 +184,34 @@ export default {
 .city-list{
   margin-top: 20px;
   border-top: 2px solid #e4e4e4;/*no*/
+  background-color: #fff;
+}
+.topList{
+  h3{
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+    font-weight: 400;
+    font-size: 24px;
+    color: #666;
+    border-bottom: 1px solid #e4e4e4;/*no*/
+  }
+}
+.childrenList{
+  li{
+    float: left;
+    width: 25%;
+    height: 80px;
+    border-right: 1px solid #e4e4e4;/*no*/
+    border-bottom: 1px solid #e4e4e4;/*no*/
+    a{
+      display: block;
+      height: 100%;
+      line-height:80px;
+      text-align: center;
+      font-size: 24px;
+      color: #666;
+    }
+  }
 }
 </style>
