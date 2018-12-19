@@ -10,7 +10,10 @@
       </form>
       <h4 class="search-history">
         <span v-if="searchHistory">搜索历史：</span>
-        <span v-else>搜索结果：</span>
+        <span v-else>
+          <span v-if="searchTotal > 0">搜索共(<i style="color:#3190e8;">{{searchTotal}}</i>)条结果：</span>
+          <span v-else>很抱歉，无搜索结果</span>
+        </span>
       </h4>
       <section class="search-address-list">
         <ul>
@@ -32,7 +35,8 @@ export default {
       headTitle: null, // 当前城市
       searchAddress: null, // 搜索城市地址
       searchHistory: true, // 搜索历史标签
-      searchAddressList: []// 搜索城市地址列表
+      searchAddressList: [], // 搜索城市地址列表
+      searchTotal: null// 搜索结果条数
     }
   },
   components: {
@@ -51,10 +55,9 @@ export default {
       if (this.searchAddress) {
         let cityId = this.$route.query.cityId
         homeApi.getSearchAddress(cityId, this.searchAddress).then(res => {
-          if (res.data.length > 0) {
-            this.searchHistory = false
-            this.searchAddressList = res.data
-          }
+          this.searchHistory = false
+          this.searchTotal = res.data.length
+          this.searchAddressList = res.data
         })
       }
     }
