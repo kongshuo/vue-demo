@@ -1,16 +1,16 @@
 <template>
-  <div class="location">
+  <div class="location app">
     <head-top>
       <a href="javascript:;" slot="logo" class="logo left" @click="reload">ele.me</a>
       <a href="javascript:;" slot="login" class="login right" @click="login">登录|注册</a>
     </head-top>
-    <section class="location-content">
+    <section class="location-content flex1">
       <div class="now-city">
         <p>
           <span class="left">当前定位城市:</span>
           <span class="right">定位不准时,请在城市列表中选择</span>
         </p>
-        <a href="javascript:;">
+        <a href="javascript:;" @click="toHref(cityGuessId)">
           <span>{{cityGuess}}</span>
           <i class="right iconfont icon-jinru"></i>
         </a>
@@ -18,7 +18,7 @@
       <div class="hot-city">
         <h3 class="hot-city-title">热门城市</h3>
         <ul class="clearfix">
-          <li v-for="(itemCity,index) of cityHot" :key="index">
+          <li v-for="(itemCity,index) of cityHot" :key="index" @click="toHref(itemCity.id)">
             <a href="javascript:;">{{itemCity.name}}</a>
           </li>
         </ul>
@@ -28,7 +28,7 @@
           <li v-for="(cityItems,key,index) of sortAfterCityAll" :key="index">
               <h3>{{key==="A" ? "A (按字母排序)" : key}}</h3>
               <ul class="childrenList clearfix">
-                <li v-for="(cityItem,index) of cityItems" :key="index">
+                <li v-for="(cityItem,index) of cityItems" :key="index" @click="toHref(cityItem.id)">
                  <a href="javascript:;" class="ellipsis" :title="cityItem.name">{{cityItem.name}}</a>
                 </li>
               </ul>
@@ -44,7 +44,8 @@ import homeApi from '@/service/homeApi'
 export default {
   data () {
     return {
-      cityGuess: '', // 默认地址
+      cityGuess: null, // 定位地址
+      cityGuessId: null, // 定位地址Id
       cityHot: [], // 热门地址
       cityAll: {} // 全部地址
     }
@@ -62,10 +63,6 @@ export default {
     }
   },
   methods: {
-    getdata () {
-      console.log(this.cityHot)
-      console.log(this.cityAll)
-    },
     // 点击logo刷新页面
     reload () {
       window.location.reload()
@@ -73,6 +70,10 @@ export default {
     // 跳转到登录页
     login () {
       this.$router.push({path: '/login'})
+    },
+    // 跳转到当前城市查询页
+    toHref (pramas) {
+      this.$router.push({path: '/searchCity', query: {cityId: pramas}})
     }
   },
   activated () {
@@ -80,6 +81,7 @@ export default {
     homeApi.cityGuess().then(res => {
       if (res.statusText === 'OK') {
         this.cityGuess = res.data.name
+        this.cityGuessId = res.data.id
       }
     })
     // 热门城市接口调用
@@ -100,9 +102,6 @@ export default {
 
 <style lang="scss" scoped>
 .location{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
   .logo,.login{
     display: inline-block;
     height: 100%;
@@ -111,10 +110,6 @@ export default {
     font-size: 28px;
     color: #fff;
   }
-}
-.location-content{
-  flex: 1;
-  overflow-y: auto;
 }
 .now-city{
   margin-top: 20px;

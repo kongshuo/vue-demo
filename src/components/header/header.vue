@@ -2,12 +2,13 @@
   <header id="head">
       <slot name="logo"></slot>
       <slot name="login"></slot>
-      <a href="javascript:;" class="go-back" v-if="isGoBack">
+      <a href="javascript:;" class="go-back" v-if="isGoBack" @click="$router.go(-1)">
         <i class="iconfont icon-fanhui"></i>
       </a>
       <section class="head-title" v-if="headTitle">
         <span>{{headTitle}}</span>
       </section>
+      <slot name="rightContent"></slot>
   </header>
 </template>
 <script>

@@ -31,4 +31,14 @@ export default {
 .fade-in-enter,.fade-in-leave-to{
   opacity: 0;
 }
+/*全局定义class,使用flex布局使头部固定在顶部*/
+.app{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.flex1{
+  flex:1;
+  overflow-y: auto;
+}
 </style>
