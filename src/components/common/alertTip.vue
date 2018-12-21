@@ -20,6 +20,7 @@ export default {
   methods: {
     confirm () {
       this.$emit('update:showAlertTip', false)
+      this.$emit('callback')
     }
   }
 }

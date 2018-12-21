@@ -16,5 +16,16 @@ export default {
   // 获取用户信息
   getUser (userId) {
     return commonApi.get('/api/v1/user', { user_id: userId })
+  },
+  // 检测账号是否存在
+  checkExsis (checkNumber, type) {
+    return commonApi.get('/api/v1/users/exists', {
+      [type]: checkNumber,
+      type
+    })
+  },
+  // 修改密码
+  changePassword (params) {
+    return commonApi.post('/api/v2/changepassword', params)
   }
 }
