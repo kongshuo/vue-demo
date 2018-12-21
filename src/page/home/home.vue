@@ -2,7 +2,10 @@
   <div class="location app">
     <head-top>
       <a href="javascript:;" slot="logo" class="logo left" @click="reload">ele.me</a>
-      <a href="javascript:;" slot="login" class="login right" @click="login">登录|注册</a>
+      <a href="javascript:;" slot="login" class="login right" @click="login" v-if="!isLogin">登录|注册</a>
+      <a href="javascript:;" slot="login" class="login right" v-if="isLogin">
+        <i class="iconfont icon-yonghu" style="color:#fff;font-size:18px;font-weight:bold;"></i>
+      </a>
     </head-top>
     <section class="location-content flex1">
       <div class="now-city">
@@ -41,6 +44,8 @@
 <script>
 import headTop from '@/components/header/header'
 import homeApi from '@/service/homeApi'
+import localStorageApi from '@/config/localStore'
+import {mapGetters} from 'vuex'
 export default {
   data () {
     return {
@@ -60,7 +65,10 @@ export default {
         setSortDate[ele] = this.cityAll[ele]
       })
       return setSortDate
-    }
+    },
+    ...mapGetters({
+      isLogin: 'isLogin'
+    })
   },
   methods: {
     // 点击logo刷新页面
@@ -74,6 +82,13 @@ export default {
     // 跳转到当前城市查询页
     toHref (pramas) {
       this.$router.push({path: '/searchCity', query: {cityId: pramas}})
+    },
+    // 获取用户信息
+    getUserInfo () {
+      let userId = localStorageApi.getStorage('user_id')
+      if (userId) {
+        this.$store.dispatch('getUserInfo', userId)
+      }
     }
   },
   activated () {
@@ -96,6 +111,9 @@ export default {
         this.cityAll = res.data
       }
     })
+  },
+  mounted () {
+    this.getUserInfo()
   }
 }
 </script>

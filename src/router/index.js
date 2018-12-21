@@ -1,20 +1,24 @@
 // 路由的懒加载
-/* home */
+/** home */
 const home = r =>
   require.ensure([], () => r(require('../page/home/home')), 'home')
+/** searchCity */
 const searchCity = r =>
   require.ensure([], () => r(require('../page/home/searchCity')), 'searchCity')
-/* login */
+/** login */
 const login = r =>
   require.ensure([], () => r(require('../page/login/login')), 'login')
-/* login */
+/** changePassWord */
 const changePassWord = r =>
   require.ensure(
     [],
     () => r(require('../page/login/changePassWord')),
     'changePassWord'
   )
-// 在此抛出一个routes配置,是一个数组
+/** smite */
+const smite = r =>
+  require.ensure([], () => r(require('../page/smite/smite')), 'smite')
+// 在此抛出一个routes配置,array
 export default [
   {
     path: '',
@@ -39,25 +43,21 @@ export default [
   {
     path: '/searchCity',
     component: searchCity,
-    name: 'searchCity',
-    meta: {
-      keepAlive: true
-    }
+    name: 'searchCity'
   },
   {
     path: '/login',
     component: login,
-    name: 'login',
-    meta: {
-      keepAlive: false
-    }
+    name: 'login'
   },
   {
     path: '/changePassWord',
     component: changePassWord,
-    name: 'changePassWord',
-    meta: {
-      keepAlive: false
-    }
+    name: 'changePassWord'
+  },
+  {
+    path: '/smite',
+    component: smite,
+    name: 'smite'
   }
 ]

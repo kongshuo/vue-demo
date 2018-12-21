@@ -5,7 +5,7 @@
     </head-top>
     <div class="flex1">
       <form class="search-city-form" @submit.prevent>
-        <input type="text" v-model.trim="searchAddress" placeholder="输入学校、商务楼、地址" required>
+        <input type="search" v-model.trim="searchAddress" placeholder="输入学校、商务楼、地址" required>
         <button @click="search">搜索</button>
       </form>
       <h4 class="search-history">
@@ -17,10 +17,19 @@
       </h4>
       <section class="search-address-list">
         <ul>
-          <li v-for="(item,index) of searchAddressList" :key="index">
+          <li v-for="(item,index) of searchAddressList" :key="index" @click="nextPage(item,index)">
             <h4 class="ellipsis">{{item.name}}</h4>
             <p class="ellipsis">{{item.address}}</p>
           </li>
+        </ul>
+        <ul v-if='searchHistory&&searchHistoryList.length>0'>
+          <li v-for="(item,index) of searchHistoryList" :key="index" @click="nextPage(item,index)">
+            <h4 class="ellipsis">{{item.name}}</h4>
+            <p class="ellipsis">{{item.address}}</p>
+          </li>
+          <div class="clear-all">
+            <a href="javascript:;" @click="clearAll">清空所有</a>
+          </div>
         </ul>
       </section>
     </div>
@@ -29,18 +38,22 @@
 <script>
 import headTop from '@/components/header/header'
 import homeApi from '@/service/homeApi'
+import localStorageApi from '@/config/localStore'
+import alertTip from '@/components/common/alertTip'
 export default {
   data () {
     return {
       headTitle: null, // 当前城市
       searchAddress: null, // 搜索城市地址
-      searchHistory: true, // 搜索历史标签
+      searchHistory: true, // 搜索历史标签显示
       searchAddressList: [], // 搜索城市地址列表
-      searchTotal: null// 搜索结果条数
+      searchTotal: null, // 搜索结果条数
+      searchHistoryList: [] // 搜索历史列表
     }
   },
   components: {
-    headTop
+    headTop,
+    alertTip
   },
   methods: {
     // 获取所选城市接口
@@ -60,10 +73,43 @@ export default {
           this.searchAddressList = res.data
         })
       }
+    },
+    // 初始化历史
+    initHistory () {
+      let placeHistory = JSON.parse(window.localStorage.getItem('placeHistroy'))
+      if (placeHistory !== null) {
+        this.searchHistoryList = placeHistory.map(item => item)
+      } else {
+        this.searchHistoryList = []
+      }
+    },
+    // 具体地址内容跳转
+    nextPage (item, index) {
+      let placeHistory = JSON.parse(window.localStorage.getItem('placeHistroy')) // localStorage中是否有placeHistory
+      if (placeHistory !== null) {
+        let isAdd = placeHistory.some(ele => {
+          if (ele.geohash === item.geohash) {
+            return true
+          }
+        })
+        if (!isAdd) {
+          this.searchHistoryList.push(item)
+        }
+      } else {
+        this.searchHistoryList.push(item)
+      }
+      localStorageApi.setStorage('placeHistroy', this.searchHistoryList)
+      this.$router.push({path: '/smite'})
+    },
+    // 清空所有
+    clearAll () {
+      // 正常应该加一个弹窗提示，在此省略
+      localStorageApi.removeStorage('placeHistroy')
+      this.initHistory()
     }
   },
-  // 使用Keep-alive的钩子函数,用来解决根组件复用不触发created，mounted的问题
-  activated () {
+  mounted () {
+    this.initHistory()
     this.getCity()
   }
 }
@@ -129,6 +175,16 @@ export default {
   p{
     font-size: 24px;
     color: #666;
+  }
+}
+.clear-all{
+  height: 100px;
+  line-height: 60px;
+  padding: 20px 0;
+  text-align: center;
+  a{
+    font-size: 32px;
+    color: #999;
   }
 }
 </style>

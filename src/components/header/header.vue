@@ -6,7 +6,7 @@
         <i class="iconfont icon-fanhui"></i>
       </a>
       <section class="head-title" v-if="headTitle">
-        <span>{{headTitle}}</span>
+        <span class="ellipsis">{{headTitle}}</span>
       </section>
       <slot name="rightContent"></slot>
   </header>
@@ -45,7 +45,7 @@ export default {
 }
 .head-title{
   height: 90px;
-  padding:0 90px;
+  padding:0 150px;
   span{
     display: block;
     height: 90px;

@@ -28,28 +28,34 @@
       <p class="tips">温馨提示：未注册过的账号，登录时将自动注册</p>
       <p class="tips">注册过的用户可凭账号密码登录</p>
       <div class="login-btn-box">
-        <button class="login-btn">登  录</button>
+        <button class="login-btn" @click="login">登  录</button>
       </div>
     </form>
     <router-link to="./changePassWord" class="changePassWord">修改密码?</router-link>
+    <alert-tip :showAlertTip.sync="showAlertTip" :alertContent="alertContent"></alert-tip>
   </div>
 </template>
 <script>
 import headTop from '@/components/header/header'
+import alertTip from '@/components/common/alertTip'
 import loginApi from '@/service/loginApi'
 export default {
   data () {
     return {
       headTitle: '密码登录', // 头部标题
-      userAccount: '', // 账号
-      passWord: '', // 密码
-      codeNumber: '', // 验证码
+      userAccount: null, // 账号
+      passWord: null, // 密码
+      codeNumber: null, // 验证码
       showPassWord: false, // 是否显示密码,默认不显示
-      captchaCodeImg: ''// 验证码地址
+      captchaCodeImg: null, // 验证码地址
+      showAlertTip: false, // 控制提示弹出层显示
+      alertContent: null, // 提示内容
+      userInfo: null
     }
   },
   components: {
-    headTop
+    headTop,
+    alertTip
   },
   methods: {
     // 图片验证码接口请求
@@ -62,8 +68,45 @@ export default {
     tabShowPassWord () {
       this.showPassWord = !this.showPassWord
     },
-    see () {
-      console.log(this.captchaCodeImg)
+    // 登录
+    login () {
+      if (!this.userAccount) {
+        this.alertContent = '账号不能为空！'
+        this.showAlertTip = true
+        return false
+      } else if (!this.passWord) {
+        this.alertContent = '密码不能为空！'
+        this.showAlertTip = true
+        return false
+      } else if (!this.codeNumber) {
+        this.alertContent = '验证码不能为空！'
+        this.showAlertTip = true
+        return false
+      }
+      loginApi.accountLogin(this.userAccount, this.passWord, this.codeNumber).then(res => {
+        let userId = res.data.user_id
+        this.userInfo = res.data
+        if (!userId) {
+          this.showAlertTip = true
+          // 当密码错误时，清空密码和刷新验证码重新输入
+          if (res.data.type === 'ERROR_PASSWORD') {
+            this.alertContent = res.data.message
+            this.passWord = null
+            this.codeNumber = null
+            this.getImgCode()
+            return false
+            // 当验证码错误时，刷新验证码重新输入
+          } else if (res.data.type === 'ERROR_CAPTCHA') {
+            this.alertContent = res.data.message
+            this.codeNumber = null
+            this.getImgCode()
+            return false
+          }
+        } else {
+          this.$store.dispatch('setUserInfo', this.userInfo)
+          this.$router.go(-1)
+        }
+      })
     }
   },
   created () {
@@ -79,6 +122,7 @@ export default {
     font-size: 32px;
     color: #666;
     border: 0;
+    outline: none;
   }
   section{
     position: relative;
