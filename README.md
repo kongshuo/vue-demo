@@ -1,6 +1,12 @@
 # study-vue-elm
-<div>此项目是按照bailicangdu所做开源项目编写,只为学习理解vue的使用，原开源项目<a href="https://github.com/bailicangdu/vue2-elm" target="_blank">点击这里<a/></div>
-<div>接口未使用fetch,选择axios，未使用svg，使用iconfont代替svg</div>
+<h1>此项目是临摹vue开源项目,只为学习理解vue的使用，原开源项目<a href="https://github.com/bailicangdu/vue2-elm" target="_blank">点击这里<a/>
+</h1>
+<div>
+<b>注意：此项目功能样式是临摹原项目所做，但实现方式有很多不同。例：</b>
+<p>1:原项目使用fetch调取接口，此项目使用官方推荐的axios</p>
+<p>2：布局方面，原项目直接使用rem单位，此项目使用flexible和px2rem的插件进行转换</p>
+<p>3：原项目使用svg矢量图形，此项目使用iconfont字体图标库代替</p>
+</div>
 
 ## Build Setup
 
