@@ -3,7 +3,7 @@
     <head-top>
       <a href="javascript:;" slot="logo" class="logo left" @click="reload">ele.me</a>
       <a href="javascript:;" slot="login" class="login right" @click="login" v-if="!isLogin">登录|注册</a>
-      <a href="javascript:;" slot="login" class="login right" v-if="isLogin">
+      <a href="javascript:;" slot="login" class="login right" v-if="isLogin" @click="toProfile">
         <i class="iconfont icon-yonghu" style="color:#fff;font-size:18px;font-weight:bold;"></i>
       </a>
     </head-top>
@@ -89,6 +89,10 @@ export default {
       if (userId) {
         this.$store.dispatch('getUserInfo', userId)
       }
+    },
+    // 跳转到个人中心
+    toProfile () {
+      this.$router.push({path: '/profile'})
     }
   },
   activated () {

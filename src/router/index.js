@@ -18,6 +18,9 @@ const changePassWord = r =>
 /** smite */
 const smite = r =>
   require.ensure([], () => r(require('../page/smite/smite')), 'smite')
+/** profile */
+const profile = r =>
+  require.ensure([], () => r(require('../page/login/profile')), 'profile')
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -59,5 +62,10 @@ export default [
     path: '/smite',
     component: smite,
     name: 'smite'
+  },
+  {
+    path: '/profile',
+    component: profile,
+    name: 'profile'
   }
 ]
