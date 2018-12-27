@@ -20,7 +20,18 @@ const smite = r =>
   require.ensure([], () => r(require('../page/smite/smite')), 'smite')
 /** profile */
 const profile = r =>
-  require.ensure([], () => r(require('../page/login/profile')), 'profile')
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/profile')),
+    'profile'
+  )
+/** profile/info */
+const info = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/info')),
+    'info'
+  )
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -66,6 +77,14 @@ export default [
   {
     path: '/profile',
     component: profile,
-    name: 'profile'
+    name: 'profile',
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/profile/info',
+    component: info,
+    name: 'info'
   }
 ]

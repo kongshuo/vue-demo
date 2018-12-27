@@ -3,7 +3,7 @@
     <head-top :isGoBack="true" :headTitle="headTitle"></head-top>
     <div class="flex1">
        <div class="profile">
-        <a href="javascript:;">
+        <router-link class="profile-router" :to="userName==='登录/注册'?'/login':'/profile/info'">
           <div class="userImg-box">
             <img src="@/assets/default.jpg" alt="">
           </div>
@@ -14,20 +14,20 @@
           <div class="jinru">
             <i class="iconfont icon-jinru"></i>
           </div>
-        </a>
+       </router-link>
       </div>
       <div class="profile-module">
         <ul>
           <li>
-            <p><span class="yellow">0.00</span>元</p>
+            <p><span class="yellow">{{parseInt(myBalance).toFixed(2)}}</span>元</p>
             <p>我的余额</p>
           </li>
           <li>
-            <p><span class="red">3</span>个</p>
+            <p><span class="red">{{myDiscount}}</span>个</p>
             <p>我的优惠</p>
           </li>
           <li>
-            <p><span class="green">0</span>分</p>
+            <p><span class="green">{{myPoints}}</span>分</p>
             <p>我的积分</p>
           </li>
         </ul>
@@ -67,6 +67,9 @@
       </div>
     </div>
     <foot-bottom></foot-bottom>
+    <transition name="router-slid" mode="out-in">
+        <router-view></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -78,11 +81,11 @@ export default {
   data () {
     return {
       headTitle: '个人中心',
-      userName: null, // 用户名
-      userMobile: null, // 用户绑定手机号
-      myMoney: null, // 我的余额
-      myDiscount: null, // 我的优惠
-      myPoints: null// 我的积分
+      userName: '', // 用户名
+      userMobile: '', // 用户绑定手机号
+      myBalance: 0, // 我的余额
+      myDiscount: 0, // 我的优惠
+      myPoints: 0// 我的积分
     }
   },
   components: {
@@ -95,20 +98,26 @@ export default {
       if (localStorageApi.getStorage('user_id')) {
         let userId = localStorageApi.getStorage('user_id')
         loginApi.getUser(userId).then(res => {
-          this.userName = res.data.username ? res.data.username : '未登录'
-          this.userMobile = res.data.mobile ? res.data.mobile : '暂无手机绑定'
+          this.userName = res.data.username === '' ? '登录/注册' : res.data.username
+          this.userMobile = res.data.mobile === '' ? '暂无手机绑定' : res.data.mobile
+          this.myBalance = res.data.balance
+          this.myDiscount = res.data.gift_amount
+          this.myPoints = res.data.point
         })
+      } else {
+        this.userName = '登录/注册'
+        this.userMobile = '暂无手机绑定'
       }
     }
   },
-  mounted () {
+  activated () {
     this.getUserInfo()
   }
 }
 </script>
 <style lang="scss" scoped>
 .profile{
-  a{
+  .profile-router{
     position: relative;
     display: block;
     padding: 40px 170px;
@@ -135,6 +144,9 @@ export default {
       font-size: 28px;
       color: #fff;
       font-weight: bold;
+    }
+    :first-child{
+      font-size: 36px;
     }
   }
   .jinru{
@@ -210,5 +222,12 @@ export default {
           float: right;
         }
       }
+    .router-slid-enter-active, .router-slid-leave-active {
+        transition: all .4s;
+    }
+    .router-slid-enter, .router-slid-leave-active {
+        transform: translate3d(2rem, 0, 0);
+        opacity: 0;
+    }
   }
 </style>

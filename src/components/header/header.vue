@@ -50,7 +50,7 @@ export default {
     display: block;
     height: 90px;
     line-height: 90px;
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 600;
     color: #fff;
     text-align: center;
