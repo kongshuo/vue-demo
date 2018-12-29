@@ -18,18 +18,18 @@
       </div>
       <div class="profile-module">
         <ul>
-          <li>
+          <router-link tag="li" :to="{path:'/balance'}">
             <p><span class="yellow">{{parseInt(myBalance).toFixed(2)}}</span>元</p>
             <p>我的余额</p>
-          </li>
-          <li>
+          </router-link>
+          <router-link tag="li" :to="{path:'/benefit'}">
             <p><span class="red">{{myDiscount}}</span>个</p>
             <p>我的优惠</p>
-          </li>
-          <li>
+         </router-link>
+          <router-link tag="li" :to="{path:'/points'}">
             <p><span class="green">{{myPoints}}</span>分</p>
             <p>我的积分</p>
-          </li>
+          </router-link>
         </ul>
       </div>
       <div class="profile-other-module">

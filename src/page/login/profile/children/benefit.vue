@@ -1,7 +1,7 @@
 <template>
   <div class="benefit app">
     <head-top :isGoBack="true" :headTitle="headTitle"></head-top>
-    <img-load></img-load>
+    <img-load v-if="loadShow"></img-load>
   </div>
 </template>
 <script>

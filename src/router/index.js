@@ -1,36 +1,86 @@
 // 路由的懒加载
-/** home */
+/**
+ * home
+ */
 const home = r =>
   require.ensure([], () => r(require('../page/home/home')), 'home')
-/** searchCity */
+/**
+ * searchCity
+ */
 const searchCity = r =>
   require.ensure([], () => r(require('../page/home/searchCity')), 'searchCity')
-/** login */
+/**
+ * login
+ */
 const login = r =>
   require.ensure([], () => r(require('../page/login/login')), 'login')
-/** changePassWord */
+/**
+ * changePassWord
+ */
 const changePassWord = r =>
   require.ensure(
     [],
     () => r(require('../page/login/changePassWord')),
     'changePassWord'
   )
-/** smite */
+/**
+ * smite
+ */
 const smite = r =>
   require.ensure([], () => r(require('../page/smite/smite')), 'smite')
-/** profile */
+/**
+ * profile
+ */
 const profile = r =>
   require.ensure(
     [],
     () => r(require('../page/login/profile/profile')),
     'profile'
   )
-/** profile/info */
+/**
+ * profile/info
+ */
 const info = r =>
   require.ensure(
     [],
     () => r(require('../page/login/profile/children/info')),
     'info'
+  )
+/**
+ * profile/balance
+ */
+const balance = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/balance')),
+    'balance'
+  )
+/**
+ * profile/balanceThat
+ */
+const balanceThat = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/balanceThat')),
+    'balanceThat'
+  )
+/**
+ * profile/benefit
+ */
+const benefit = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/benefit')),
+    'benefit'
+  )
+/**
+ * profile/points
+ */
+const points = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/points')),
+    'points'
   )
 // 在此抛出一个routes配置,array
 export default [
@@ -83,8 +133,28 @@ export default [
     }
   },
   {
-    path: '/profile/info',
+    path: '/info',
     component: info,
     name: 'info'
+  },
+  {
+    path: '/balance',
+    component: balance,
+    name: 'balance'
+  },
+  {
+    path: '/balanceThat',
+    component: balanceThat,
+    name: 'balanceThat'
+  },
+  {
+    path: '/benefit',
+    component: benefit,
+    name: 'benefit'
+  },
+  {
+    path: '/points',
+    component: points,
+    name: 'points'
   }
 ]

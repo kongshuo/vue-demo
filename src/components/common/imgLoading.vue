@@ -41,6 +41,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+  top: 90px;
   z-index: 1000;
 }
 .loading{
@@ -50,9 +51,9 @@ export default {
   z-index: 9;
   width: 200px;
   height: 200px;
-  margin-top: -100px;
+  margin-top: -200px;
   margin-left: -100px;
-  background:url('/static/icon_loading.png') center no-repeat;
+  background:url('/static/img/icon_loading.png') center no-repeat;
   animation: imgup .6s infinite ease-in-out;
 }
 .shadow-circle{
@@ -63,7 +64,7 @@ export default {
   width: 60px;
   height: 40px;
   border-radius: 50%;
-  margin-top: 100px;
+  margin-top: 0;
   margin-left: -30px;
   transform: rotateX(60deg);
   background: #999;
