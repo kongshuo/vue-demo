@@ -7,7 +7,7 @@
           <p class="balance-now">
             <span>当前余额</span>
             <router-link :to="{path:'/balanceThat'}" class="balanceThat">
-              <img src="@/img/description.png" alt="">
+              <img src="/static/img/description.png" alt="">
               <span>余额说明</span>
             </router-link>
           </p>
@@ -21,7 +21,7 @@
       <div class="balance-detail">
         <h4>交易明细</h4>
         <section class="trading-detail">
-          <img src="@/img/no-log.png" alt="">
+          <img src="/static/img/no-log.png" alt="">
           <p>暂无交易记录</p>
         </section>
       </div>

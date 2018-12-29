@@ -3,7 +3,7 @@
     <head-top :isGoBack="true" :headTitle="headTitle"></head-top>
     <div class="flex1">
        <div class="profile">
-        <router-link class="profile-router" :to="userName==='登录/注册'?'/login':'/profile/info'">
+        <router-link class="profile-router" :to="userName==='登录/注册'?'/login':'/info'">
           <div class="userImg-box">
             <img src="@/assets/default.jpg" alt="">
           </div>

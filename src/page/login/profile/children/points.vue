@@ -7,7 +7,7 @@
           <p class="balance-now">
             <span>当前积分</span>
             <router-link :to="{path:'/pointsThat'}" class="balanceThat">
-              <img src="@/img/description.png" alt="">
+              <img src="/static/img/description.png" alt="">
               <span>积分说明</span>
             </router-link>
           </p>
@@ -21,7 +21,7 @@
       <div class="balance-detail">
         <h4>最近30天积分记录</h4>
         <section class="trading-detail">
-          <img src="@/img/no-log.png" alt="">
+          <img src="/static/img/no-log.png" alt="">
           <p>最近30天无积分记录</p>
           <p>快去下单赚取大量积分吧</p>
         </section>
