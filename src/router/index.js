@@ -82,6 +82,15 @@ const points = r =>
     () => r(require('../page/login/profile/children/points')),
     'points'
   )
+/**
+ * profile/pointsThat
+ */
+const pointsThat = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/pointsThat')),
+    'pointsThat'
+  )
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -156,5 +165,10 @@ export default [
     path: '/points',
     component: points,
     name: 'points'
+  },
+  {
+    path: '/pointsThat',
+    component: pointsThat,
+    name: 'pointsThat'
   }
 ]
