@@ -15,6 +15,15 @@ const searchCity = r =>
 const login = r =>
   require.ensure([], () => r(require('../page/login/login')), 'login')
 /**
+ * changeUserName
+ */
+const changeUserName = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/changeUserName')),
+    'changeUserName'
+  )
+/**
  * changePassWord
  */
 const changePassWord = r =>
@@ -122,6 +131,11 @@ export default [
     path: '/login',
     component: login,
     name: 'login'
+  },
+  {
+    path: '/changeUserName',
+    component: changeUserName,
+    name: 'changeUserName'
   },
   {
     path: '/changePassWord',

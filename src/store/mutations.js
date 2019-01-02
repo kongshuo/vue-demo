@@ -10,5 +10,8 @@ export default {
   [types.GET_USERINFO] (state, info) {
     state.getUserInfo = info
     state.isLogin = true
+  },
+  [types.SET_USERNAME] (state, userName) {
+    state.setUserInfo = Object.assign({}, state.setUserInfo, { userName })
   }
 }

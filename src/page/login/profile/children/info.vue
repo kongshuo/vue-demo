@@ -9,11 +9,11 @@
       </div>
       <div class="small-module">
         <ul>
-          <li>
+          <router-link tag="li" :to="{path:'/changeUserName'}">
             <span class="small-title">用户名</span>
             <span class="right-span">kong0304</span>
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
           <li>
             <span class="small-title">收货地址</span>
             <i class="iconfont icon-jinru"></i>
@@ -28,11 +28,11 @@
         </ul>
         <h4>安全设置</h4>
         <ul>
-          <li>
+          <router-link tag="li" :to="{path:'/changePassWord'}">
             <span class="small-title">登录密码</span>
             <span class="right-span">修改</span>
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
         </ul>
         <div class="sign-up">
           <button>退出登录</button>
@@ -103,6 +103,7 @@ export default {
     padding: 20px;
     font-size: 24px;
     color: #666;
+    border-top: 1px solid #ddd;/*no*/
   }
 }
 .sign-up{
