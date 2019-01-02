@@ -7,7 +7,6 @@
 <p>2：布局方面，原项目直接使用rem单位，此项目使用flexible和px2rem的插件进行转换</p>
 <p>3：原项目使用svg矢量图形，此项目使用iconfont字体图标库代替</p>
 </div>
-<div><b>未全部完成，接口有点问题</b></div>
 ## Build Setup
 
 ``` bash
