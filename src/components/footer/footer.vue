@@ -1,30 +1,30 @@
 <template>
   <footer class="footer">
     <ul>
-      <li>
+      <router-link tag="li" :class="$route.path.indexOf('msite')!==-1? 'active':''" :to="{path:'/msite'}">
         <span>
           <i class="iconfont icon-changyonglogo40"></i>
         </span>
         <span>外卖</span>
-      </li>
-      <li>
+      </router-link>
+      <router-link tag="li" :class="$route.path.indexOf('search')!==-1? 'active':''" :to="{path:'/search'}">
         <span>
           <i class="iconfont icon-sousuo"></i>
         </span>
         <span>搜索</span>
-      </li>
-      <li>
+     </router-link>
+      <router-link tag="li" :class="$route.path.indexOf('order')!==-1? 'active':''" :to="{path:'/order'}">
         <span>
            <i class="iconfont icon-wodedingdan"></i>
         </span>
         <span>订单</span>
-      </li>
-      <li :class="$route.path.indexOf('profile')!==-1? 'active':''">
+      </router-link>
+       <router-link tag="li"  :class="$route.path.indexOf('profile')!==-1? 'active':''" :to="{path:'/profile'}">
         <span>
            <i class="iconfont icon-yonghu"></i>
         </span>
         <span>我的</span>
-      </li>
+      </router-link>
     </ul>
   </footer>
 </template>

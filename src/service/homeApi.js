@@ -26,12 +26,21 @@ export default {
     return commonApi.get('/api/v1/cities/' + cityId)
   },
   /**
-   * 获取搜索地址
+   * 获取当前城市搜索地址
    */
   getSearchAddress (cityId, SearchAddress) {
     return commonApi.get('/api/v1/pois', {
       type: 'search',
       city_id: cityId,
+      keyword: SearchAddress
+    })
+  },
+  /**
+   * 搜索地址
+   */
+  searchNearby (SearchAddress) {
+    return commonApi.get('/api/v1/pois', {
+      type: 'nearby',
       keyword: SearchAddress
     })
   }

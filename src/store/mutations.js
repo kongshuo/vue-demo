@@ -13,5 +13,8 @@ export default {
   },
   [types.SET_USERNAME] (state, userName) {
     state.setUserInfo = Object.assign({}, state.setUserInfo, { userName })
+  },
+  [types.RESET_ADDRESS] (state, newAddress) {
+    state.newAddress = newAddress
   }
 }

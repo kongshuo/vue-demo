@@ -14,10 +14,10 @@
             <span class="right-span">kong0304</span>
             <i class="iconfont icon-jinru"></i>
           </router-link>
-          <li>
+          <router-link tag="li" :to="{path:'/newAddress'}">
             <span class="small-title">收货地址</span>
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
         </ul>
         <h4>账号绑定</h4>
         <ul>

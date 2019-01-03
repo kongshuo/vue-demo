@@ -1,4 +1,11 @@
-// 路由的懒加载
+/**
+ * 路由的懒加载
+ * const searchAddress = resolve =>
+ * require(['../page/login/address/searchAddress'], resolve)
+ */
+
+// 使用webpack的ensure
+
 /**
  * home
  */
@@ -100,6 +107,38 @@ const pointsThat = r =>
     () => r(require('../page/login/profile/children/pointsThat')),
     'pointsThat'
   )
+/**
+ * address/newAddress
+ */
+const newAddress = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/address/newAddress')),
+    'newAddress'
+  )
+/**
+ * address/editAddress
+ */
+const editAddress = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/address/editAddress')),
+    'editAddress'
+  )
+/**
+ * address/editAddress
+ */
+const searchAddress = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/address/searchAddress')),
+    'searchAddress'
+  )
+/**
+ * order/order
+ */
+const order = r =>
+  require.ensure([], () => r(require('../page/order/order')), 'order')
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -184,5 +223,25 @@ export default [
     path: '/pointsThat',
     component: pointsThat,
     name: 'pointsThat'
+  },
+  {
+    path: '/newAddress',
+    component: newAddress,
+    name: 'newAddress'
+  },
+  {
+    path: '/editAddress',
+    component: editAddress,
+    name: 'editAddress'
+  },
+  {
+    path: '/searchAddress',
+    component: searchAddress,
+    name: 'searchAddress'
+  },
+  {
+    path: '/order',
+    component: order,
+    name: 'order'
   }
 ]
