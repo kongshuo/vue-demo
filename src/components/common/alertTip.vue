@@ -15,6 +15,7 @@ export default {
   /**
    *  props参数:
    *  showAlertTip:boolean,控制提示层显示
+   *  alertContent:string,提示内容
    */
   props: ['showAlertTip', 'alertContent'],
   methods: {

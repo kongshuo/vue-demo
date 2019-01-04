@@ -139,6 +139,11 @@ const searchAddress = r =>
  */
 const order = r =>
   require.ensure([], () => r(require('../page/order/order')), 'order')
+/**
+ * search/search
+ */
+const search = r =>
+  require.ensure([], () => r(require('../page/search/search')), 'search')
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -243,5 +248,10 @@ export default [
     path: '/order',
     component: order,
     name: 'order'
+  },
+  {
+    path: '/search',
+    component: search,
+    name: 'search'
   }
 ]

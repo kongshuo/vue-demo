@@ -7,7 +7,7 @@
         </span>
         <span>外卖</span>
       </router-link>
-      <router-link tag="li" :class="$route.path.indexOf('search')!==-1? 'active':''" :to="{path:'/search'}">
+      <router-link tag="li" :class="$route.path.indexOf('search')!==-1? 'active':''" :to="{path:'/search',query:{geohash:`${geohash}`}}">
         <span>
           <i class="iconfont icon-sousuo"></i>
         </span>
@@ -29,7 +29,11 @@
   </footer>
 </template>
 <script>
+import {mapState} from 'vuex'
 export default {
+  computed: mapState({
+    geohash: 'geohash'
+  })
 }
 </script>
 <style lang="scss" scoped>

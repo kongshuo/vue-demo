@@ -16,5 +16,8 @@ export default {
   },
   [types.RESET_ADDRESS] (state, newAddress) {
     state.newAddress = newAddress
+  },
+  [types.GEOHASH] (state, geohash) {
+    state.geohash = geohash
   }
 }
