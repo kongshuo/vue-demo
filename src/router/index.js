@@ -42,8 +42,8 @@ const changePassWord = r =>
 /**
  * smite
  */
-const smite = r =>
-  require.ensure([], () => r(require('../page/smite/smite')), 'smite')
+const msite = r =>
+  require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 /**
  * profile
  */
@@ -187,9 +187,9 @@ export default [
     name: 'changePassWord'
   },
   {
-    path: '/smite',
-    component: smite,
-    name: 'smite'
+    path: '/msite',
+    component: msite,
+    name: 'msite'
   },
   {
     path: '/profile',
@@ -237,7 +237,10 @@ export default [
   {
     path: '/editAddress',
     component: editAddress,
-    name: 'editAddress'
+    name: 'editAddress',
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/searchAddress',

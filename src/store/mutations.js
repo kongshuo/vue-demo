@@ -19,5 +19,8 @@ export default {
   },
   [types.GEOHASH] (state, geohash) {
     state.geohash = geohash
+  },
+  [types.AFTER_ADDRESS] (state, obj) {
+    state.afterAddress = [obj, ...state.afterAddress]
   }
 }

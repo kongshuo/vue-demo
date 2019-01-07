@@ -24,6 +24,7 @@ export default {
 <style lang="scss" scoped>
 #head{
   position: relative;
+  top: 0;
   height: 90px;
   background-color: #3190e8;
 }

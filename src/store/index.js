@@ -8,8 +8,9 @@ const state = {
   setUserInfo: '', // 储存用户信息
   getUserInfo: '', // 获取用户信息
   isLogin: false, // 用户是否已经登录
-  newAddress: '', // 收获地址
-  geohash: '31.22299,121.36025' // 当前定位经纬度
+  newAddress: '', // 收获地址选择
+  geohash: '31.22299,121.36025', // 当前定位经纬度
+  afterAddress: [] // 已经添加到列表中的收获地址
 }
 export default new Vuex.Store({
   state,
