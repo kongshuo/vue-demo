@@ -4,7 +4,7 @@
     <div class="flex1">
       <form class="search-merchants" @submit.prevent>
         <input type="search" placeholder="请输入商家或美食名称" v-model="merchantName" @input="inputChange">
-        <button @click="search">搜索</button>
+        <button @click="search('')">搜索</button>
       </form>
       <div class="search-result" v-if="searchResultList.length>0">
         <h4>商家</h4>
@@ -17,16 +17,16 @@
           </li>
         </ul>
       </div>
-       <div class="search-history" v-if="searchHistoryList.length>0&&searchResultList.length===0">
+      <div class="search-history" v-if="historyShow">
         <h4>搜索历史</h4>
         <ul>
-          <li>
-            <span>111123123</span>
-            <span>删除</span>
+          <li v-for="(historyItem,index) of searchHistoryList" @click="search(historyItem)" :key="index">
+            <span>{{historyItem}}</span>
+            <span @click.stop="cleanCurrentHistory(historyItem)">删除</span>
           </li>
         </ul>
         <div class="clean-history">
-          <a href="javascript:;">清空搜索历史</a>
+          <a href="javascript:;" @click="cleanAllHistory">清空搜索历史</a>
         </div>
       </div>
       <p class="no-result" v-if="noResult">很抱歉，无搜索结果</p>
@@ -41,7 +41,7 @@ import footBottom from '@/components/footer/footer'
 import alertTip from '@/components/common/alertTip'
 import searchApi from '@/service/searchApi'
 import {imgBaseUrl} from '@/config/env'
-import localStorageFun from '@/config/localStore'
+import localStore from '@/config/localStore'
 export default {
   data () {
     return {
@@ -53,7 +53,8 @@ export default {
       searchResultList: [],
       imgBaseUrl, // 图片路径
       noResult: false, // 无搜索结果提示
-      searchHistoryList: [] // 搜索历史列表
+      searchHistoryList: [], // 搜索历史列表
+      historyShow: false
     }
   },
   components: {
@@ -62,9 +63,16 @@ export default {
     alertTip
   },
   methods: {
-    search () {
-      if (this.merchantName) {
-        let params = {geohash: this.geohash, keyword: this.merchantName}
+    search (val) {
+      let searchVal
+      if (val) {
+        searchVal = val
+        this.merchantName = val
+      } else {
+        searchVal = this.merchantName
+      }
+      if (searchVal) {
+        let params = {geohash: this.geohash, keyword: searchVal}
         searchApi.getSearchResult(params).then(res => {
           if (res.data.length === 0) {
             this.noResult = true
@@ -73,7 +81,7 @@ export default {
           }
           this.searchResultList = res.data
         })
-        this.searchHistoryFun(this.merchantName)
+        this.searchHistoryFun(searchVal)
       } else {
         this.showAlertTip = true
         this.alertContent = '请输入商家信息'
@@ -81,28 +89,56 @@ export default {
     },
     // 历史搜索记录
     searchHistoryFun (inputVal) {
-      let localVal = JSON.parse(localStorageFun.getStorage('searchHistory'))
-      let isAdd = false
-      if (localVal !== null && localVal.length > 0) {
-        localVal.some(item => { // 判断是否已经添加过
-          if (item === inputVal) {
-            isAdd = true
+      if (inputVal) {
+        let isAdd = true
+        if (this.searchHistoryList.length > 0) {
+          isAdd = this.searchHistoryList.some(val => {
+            return val === inputVal
+          })
+          if (!isAdd) {
+            this.searchHistoryList.push(inputVal)
           }
-        })
+        } else {
+          this.searchHistoryList.push(inputVal)
+        }
+        this.historyShow = false
+      } else {
+        let historyVal = JSON.parse(localStore.getStorage('history'))
+        if (historyVal === null || historyVal.length === 0) {
+          this.historyShow = false
+          this.searchHistoryList = []
+        } else {
+          this.historyShow = true
+          this.searchHistoryList = historyVal
+        }
       }
-      if (!isAdd) {
-        this.searchHistoryList.push(inputVal)
-      }
-      localStorageFun.setStorage('searchHistory', this.searchHistoryList)
+      localStore.setStorage('history', this.searchHistoryList)
     },
     inputChange () {
       if (this.merchantName === '') {
         this.searchResultList = []
       }
+      this.noResult = false
+      this.searchHistoryFun()
+    },
+    // 清除当前历史纪录
+    cleanCurrentHistory (val) {
+      let LocalHistoryList = JSON.parse(localStore.getStorage('history'))
+      LocalHistoryList = LocalHistoryList.filter(item => {
+        return item !== val
+      })
+      localStore.setStorage('history', LocalHistoryList)
+      this.searchHistoryFun()
+    },
+    // 全部清除历史记录
+    cleanAllHistory () {
+      localStore.removeStorage('history')
+      this.searchHistoryFun()
     }
   },
   created () {
     this.geohash = this.$route.query.geohash
+    this.searchHistoryFun()
   }
 }
 </script>
