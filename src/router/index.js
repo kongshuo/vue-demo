@@ -90,6 +90,15 @@ const benefit = r =>
     'benefit'
   )
 /**
+ * profile/enevlopeThat
+ */
+const enevlopeThat = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/enevlopeThat')),
+    'enevlopeThat'
+  )
+/**
  * profile/points
  */
 const points = r =>
@@ -218,6 +227,11 @@ export default [
     path: '/benefit',
     component: benefit,
     name: 'benefit'
+  },
+  {
+    path: '/enevlopeThat',
+    component: enevlopeThat,
+    name: 'enevlopeThat'
   },
   {
     path: '/points',

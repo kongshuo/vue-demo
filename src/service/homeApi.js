@@ -60,5 +60,13 @@ export default {
       tag: '公司',
       tag_type: 4
     })
+  },
+  /**
+   * 获取我的优惠中的红包数量
+   */
+  getHongBaoNum (params) {
+    return commonApi.get(
+      '/api/promotion/v2/users/' + params.id + '/hongbaos?limit=20&offset=0'
+    )
   }
 }
