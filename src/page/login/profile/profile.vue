@@ -58,11 +58,11 @@
             服务中心
             <i class="iconfont icon-jinru"></i>
           </li>
-          <li>
+          <router-link tag="li" to="/download">
             <span class="iconfont icon-changyonglogo40"></span>
             下载饿了么app
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
         </ul>
       </div>
     </div>

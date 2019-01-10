@@ -4,8 +4,8 @@
     <div class="flex1">
       <section class="title-tab">
         <ul class="clearfix">
-          <li><a href="javascript:;" :class="{choosed:ischoosed}" @click="tab">红包</a></li>
-          <li><a href="javascript:;" :class="{choosed:!ischoosed}" @click="tab">商家代金卷</a></li>
+          <li><a href="javascript:;" :class="{choosed:ischoosed}" @click="tab(1)">红包</a></li>
+          <li><a href="javascript:;" :class="{choosed:!ischoosed}" @click="tab(2)">商家代金卷</a></li>
         </ul>
       </section>
       <section v-if="ischoosed">
@@ -39,18 +39,31 @@
             </li>
           </ul>
           <div class="enevlope-history">
-            <a href="javascript:;">查看红包历史></a>
+            <router-link class="hb" to="/hbHistory">查看历史红包></router-link>
           </div>
         </section>
       </section>
       <section v-else>
-        商家代金卷
+        <section class="enevlope-tip">
+          <router-link :to="{path:'/volumeThat'}" class="enevlope">
+            <img src="/static/img/description.png" alt="">
+            <span>商家代金券说明</span>
+          </router-link>
+        </section>
+        <section class="volume-content">
+          <img src="/static/img/voucher.png" alt="">
+          <p class="nouse">无法使用代金卷</p>
+          <p class="why">非客户端或客户端版本过低</p>
+          <div>
+            <router-link class="method" to="/download">下载或升级客户端</router-link>
+          </div>
+        </section>
       </section>
     </div>
     <footer v-if="ischoosed">
       <ul class="clearfix">
-        <li>兑换红包</li>
-        <li>推荐有奖</li>
+        <router-link tag="li" to='/exchangeHb'>兑换红包</router-link>
+        <router-link tag="li" to='/commend'>推荐有奖</router-link>
       </ul>
     </footer>
     <img-load v-if="loadShow"></img-load>
@@ -79,8 +92,12 @@ export default {
     imgLoad
   },
   methods: {
-    tab () {
-      this.ischoosed = !this.ischoosed
+    tab (num) {
+      if (num === 1) {
+        this.ischoosed = true
+      } else {
+        this.ischoosed = false
+      }
     },
     initData () {
       if (this.setUserInfo.user_id) {
@@ -215,7 +232,7 @@ export default {
 .enevlope-history{
   padding: 40px 0;
   text-align: center;
-  a{
+  .hb{
     font-size: 28px;
     color: #999;
   }
@@ -232,5 +249,33 @@ footer{
     color: #666;
     text-align: center;
   }
+}
+.volume-content{
+  margin-top: 200px;
+  text-align: center;
+  img{
+    width: 300px;
+  }
+}
+.nouse{
+  line-height: 80px;
+  font-size: 28px;
+  color: #666;
+}
+.why{
+  line-height: 40px;
+  font-size: 24px;
+  color: #999;
+}
+.volume-content div{
+  margin-top: 40px;
+}
+.method{
+  padding: 20px 40px;
+  margin-top: 20px;
+  border-radius: 10px;
+  font-size: 28px;
+  color: #fff;
+  background: #56d176;
 }
 </style>

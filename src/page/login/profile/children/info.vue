@@ -35,22 +35,41 @@
           </router-link>
         </ul>
         <div class="sign-up">
-          <button>退出登录</button>
+          <button @click="exit">退出登录</button>
         </div>
       </div>
     </div>
+    <alert-tip :showAlertTip.sync="showAlertTip" :alertContent="alertContent" @callback="callback"></alert-tip>
   </div>
 </template>
 <script>
 import headTop from '@/components/header/header'
+import alertTip from '@/components/common/alertTip'
+import localStorage from '@/config/localStore'
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
-      headTitle: '账户信息'
+      headTitle: '账户信息',
+      showAlertTip: false,
+      alertContent: '确定退出？'
     }
   },
   components: {
-    headTop
+    headTop,
+    alertTip
+  },
+  methods: {
+    ...mapMutations(['SET_USERNAME']),
+    exit () {
+      this.showAlertTip = true
+    },
+    callback () {
+      this.showAlertTip = false
+      localStorage.removeStorage('user_id')
+      this.SET_USERNAME('')
+      this.$router.go(-1)
+    }
   }
 }
 </script>

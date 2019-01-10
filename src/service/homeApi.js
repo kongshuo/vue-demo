@@ -68,5 +68,24 @@ export default {
     return commonApi.get(
       '/api/promotion/v2/users/' + params.id + '/hongbaos?limit=20&offset=0'
     )
+  },
+  /**
+   * 获取我的优惠中的历史红包
+   */
+  getHbHistory (params) {
+    return commonApi.get(
+      '/api/promotion/v2/users/' +
+        params.id +
+        '/expired_hongbaos?limit=20&offset=0'
+    )
+  },
+  /**
+   * 兑换红包
+   */
+  exchangeHb (params) {
+    return commonApi.post('/api/v1/users/' + params.id + '/hongbao/exchange', {
+      exchange_code: params.exchangeCode,
+      captcha_code: params.captchaCode
+    })
   }
 }

@@ -99,6 +99,15 @@ const enevlopeThat = r =>
     'enevlopeThat'
   )
 /**
+ * profile/hbHistory
+ */
+const hbHistory = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/hbHistory')),
+    'hbHistory'
+  )
+/**
  * profile/points
  */
 const points = r =>
@@ -115,6 +124,33 @@ const pointsThat = r =>
     [],
     () => r(require('../page/login/profile/children/pointsThat')),
     'pointsThat'
+  )
+/**
+ * profile/volumeThat
+ */
+const volumeThat = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/volumeThat')),
+    'volumeThat'
+  )
+/**
+ * profile/exchangeHb
+ */
+const exchangeHb = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/exchangeHb')),
+    'exchangeHb'
+  )
+/**
+ * profile/commend
+ */
+const commend = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/children/commend')),
+    'commend'
   )
 /**
  * address/newAddress
@@ -153,6 +189,15 @@ const order = r =>
  */
 const search = r =>
   require.ensure([], () => r(require('../page/search/search')), 'search')
+/**
+ * profile/download
+ */
+const download = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/login/profile/download')),
+    'download'
+  )
 // 在此抛出一个routes配置,array
 export default [
   {
@@ -226,12 +271,25 @@ export default [
   {
     path: '/benefit',
     component: benefit,
-    name: 'benefit'
+    name: 'benefit',
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/enevlopeThat',
     component: enevlopeThat,
     name: 'enevlopeThat'
+  },
+  {
+    path: '/volumeThat',
+    component: volumeThat,
+    name: 'volumeThat'
+  },
+  {
+    path: '/hbHistory',
+    component: hbHistory,
+    name: 'hbHistory'
   },
   {
     path: '/points',
@@ -270,5 +328,20 @@ export default [
     path: '/search',
     component: search,
     name: 'search'
+  },
+  {
+    path: '/exchangeHb',
+    component: exchangeHb,
+    name: 'exchangeHb'
+  },
+  {
+    path: '/commend',
+    component: commend,
+    name: 'commend'
+  },
+  {
+    path: '/download',
+    component: download,
+    name: 'download'
   }
 ]
