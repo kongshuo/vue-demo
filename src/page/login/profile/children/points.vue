@@ -12,10 +12,10 @@
             </router-link>
           </p>
           <p class="count-num">
-            <span>0</span>
+            <span>{{pointsNum}}</span>
             <span>分</span>
           </p>
-          <button>积分兑换商品</button>
+          <button @click="exchangePoints">积分兑换商品</button>
         </div>
       </div>
       <div class="balance-detail">
@@ -27,18 +27,32 @@
         </section>
       </div>
     </div>
+    <alert-tip :showAlertTip.sync="showAlertTip" :alertContent="alertContent"></alert-tip>
   </div>
 </template>
 <script>
 import headTop from '@/components/header/header'
+import alertTip from '@/components/common/alertTip'
 export default {
   data () {
     return {
-      headTitle: '我的积分'
+      headTitle: '我的积分',
+      showAlertTip: false,
+      alertContent: '',
+      pointsNum: 0
     }
   },
   components: {
-    headTop
+    headTop,
+    alertTip
+  },
+  methods: {
+    exchangePoints () {
+      if (this.pointsNum === 0) {
+        this.showAlertTip = true
+        this.alertContent = '快去赚取积分吧'
+      }
+    }
   }
 }
 </script>

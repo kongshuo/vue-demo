@@ -198,7 +198,11 @@ const download = r =>
     () => r(require('../page/login/profile/download')),
     'download'
   )
-// 在此抛出一个routes配置,array
+/**
+ * service/service
+ */
+const service = r =>
+  require.ensure([], () => r(require('../page/service/service')), 'service')
 export default [
   {
     path: '',
@@ -343,5 +347,13 @@ export default [
     path: '/download',
     component: download,
     name: 'download'
+  },
+  {
+    path: '/service',
+    component: service,
+    name: 'service',
+    meta: {
+      keepAlive: true
+    }
   }
 ]

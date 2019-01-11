@@ -34,12 +34,12 @@
       </div>
       <div class="profile-other-module">
         <ul>
-          <li>
+          <router-link tag="li" to="/order">
             <span class="iconfont icon-wodedingdan"></span>
             我的订单
             <i class="iconfont icon-jinru"></i>
-          </li>
-          <li>
+          </router-link>
+          <li @click="goPointShop">
             <span class="iconfont icon-jifenshangcheng"></span>
             积分商城
             <i class="iconfont icon-jinru"></i>
@@ -53,11 +53,11 @@
       </div>
       <div class="profile-other-module">
         <ul>
-          <li>
+          <router-link tag="li" to="/service">
             <span class="iconfont icon-fuwu"></span>
             服务中心
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
           <router-link tag="li" to="/download">
             <span class="iconfont icon-changyonglogo40"></span>
             下载饿了么app
@@ -70,11 +70,13 @@
     <transition name="router-slid" mode="out-in">
         <router-view></router-view>
     </transition>
+    <alert-tip :showAlertTip.sync="showAlertTip" :alertContent="alertContent"></alert-tip>
   </div>
 </template>
 <script>
 import headTop from '@/components/header/header'
 import footBottom from '@/components/footer/footer'
+import alertTip from '@/components/common/alertTip'
 import localStorageApi from '@/config/localStore'
 import loginApi from '@/service/loginApi'
 export default {
@@ -85,12 +87,15 @@ export default {
       userMobile: '', // 用户绑定手机号
       myBalance: 0, // 我的余额
       myDiscount: 0, // 我的优惠
-      myPoints: 0// 我的积分
+      myPoints: 0, // 我的积分
+      showAlertTip: false,
+      alertContent: ''
     }
   },
   components: {
     headTop,
-    footBottom
+    footBottom,
+    alertTip
   },
   methods: {
     // 获取用户信息
@@ -108,6 +113,11 @@ export default {
         this.userName = '登录/注册'
         this.userMobile = '暂无手机绑定'
       }
+    },
+    // 积分商城
+    goPointShop () {
+      this.showAlertTip = true
+      this.alertContent = '积分商城暂未开通,请等待'
     }
   },
   activated () {

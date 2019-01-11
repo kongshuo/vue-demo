@@ -87,5 +87,11 @@ export default {
       exchange_code: params.exchangeCode,
       captcha_code: params.captchaCode
     })
+  },
+  /**
+   * 服务中心
+   */
+  getQuestions (params) {
+    return commonApi.get('/api/v3/profile/explain')
   }
 }

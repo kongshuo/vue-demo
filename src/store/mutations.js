@@ -22,5 +22,8 @@ export default {
   },
   [types.AFTER_ADDRESS] (state, obj) {
     state.afterAddress = [obj, ...state.afterAddress]
+  },
+  [types.SAVE_QUESTIONS] (state, questionList) {
+    state.questions = { ...questionList }
   }
 }
