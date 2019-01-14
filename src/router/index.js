@@ -203,6 +203,16 @@ const download = r =>
  */
 const service = r =>
   require.ensure([], () => r(require('../page/service/service')), 'service')
+/**
+ * service/questionsDetail
+ */
+const questionsDetail = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/service/questionsDetail')),
+    'questionsDetail'
+  )
+
 export default [
   {
     path: '',
@@ -355,5 +365,10 @@ export default [
     meta: {
       keepAlive: true
     }
+  },
+  {
+    path: '/questionsDetail',
+    component: questionsDetail,
+    name: 'questionsDetail'
   }
 ]
