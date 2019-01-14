@@ -93,5 +93,14 @@ export default {
    */
   getQuestions (params) {
     return commonApi.get('/api/v3/profile/explain')
+  },
+  /**
+   *兑换会员卡
+   */
+  exchangeVipCard (params) {
+    return commonApi.post(
+      '/api/member/v1/users/' + params.id + '/delivery_card/physical_card/bind',
+      { number: params.number, password: params.password }
+    )
   }
 }

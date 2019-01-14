@@ -212,7 +212,35 @@ const questionsDetail = r =>
     () => r(require('../page/service/questionsDetail')),
     'questionsDetail'
   )
-
+/**
+ * vipCard/vipCard
+ */
+const vipCard = r =>
+  require.ensure([], () => r(require('../page/vipCard/vipCard')), 'vipCard')
+/**
+ * vipCard/vipDescription
+ */
+const vipDescription = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/vipCard/vipDescription')),
+    'vipDescription'
+  )
+/**
+ * vipCard/payment
+ */
+const payment = r =>
+  require.ensure([], () => r(require('../page/vipCard/payment')), 'payment')
+/**
+ * vipCard/useCard
+ */
+const useCard = r =>
+  require.ensure([], () => r(require('../page/vipCard/useCard')), 'useCard')
+/**
+ * vipCard/buyRecord
+ */
+const buyRecord = r =>
+  require.ensure([], () => r(require('../page/vipCard/buyRecord')), 'buyRecord')
 export default [
   {
     path: '',
@@ -370,5 +398,30 @@ export default [
     path: '/questionsDetail',
     component: questionsDetail,
     name: 'questionsDetail'
+  },
+  {
+    path: '/vipCard',
+    component: vipCard,
+    name: 'vipCard'
+  },
+  {
+    path: '/vipDescription',
+    component: vipDescription,
+    name: 'vipDescription'
+  },
+  {
+    path: '/payment',
+    component: payment,
+    name: 'payment'
+  },
+  {
+    path: '/useCard',
+    component: useCard,
+    name: 'useCard'
+  },
+  {
+    path: '/buyRecord',
+    component: buyRecord,
+    name: 'buyRecord'
   }
 ]

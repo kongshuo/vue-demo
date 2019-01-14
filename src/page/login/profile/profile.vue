@@ -44,11 +44,11 @@
             积分商城
             <i class="iconfont icon-jinru"></i>
           </li>
-          <li>
+          <router-link tag="li" to="/vipCard">
             <span class="iconfont icon-huiyuan"></span>
             饿了么会员卡
             <i class="iconfont icon-jinru"></i>
-          </li>
+          </router-link>
         </ul>
       </div>
       <div class="profile-other-module">
