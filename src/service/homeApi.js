@@ -108,5 +108,15 @@ export default {
    */
   getGeohashAddress (params) {
     return commonApi.get('/api/v2/pois/' + params.geohash)
+  },
+  /**
+   *获取食品分类类别
+   */
+  getFoodTypes (params) {
+    return commonApi.get('/api/v2/index_entry', {
+      geohash: params.geohash,
+      group_type: '1',
+      'flags[]': 'F'
+    })
   }
 }
