@@ -1,13 +1,13 @@
 <template>
   <footer class="footer">
     <ul>
-      <router-link tag="li" :class="$route.path.indexOf('msite')!==-1? 'active':''" :to="{path:'/msite'}">
+      <router-link tag="li" :class="$route.path.indexOf('msite')!==-1? 'active':''" :to="{path:'/msite',query:{geohash:geohash}}">
         <span>
           <i class="iconfont icon-changyonglogo40"></i>
         </span>
         <span>外卖</span>
       </router-link>
-      <router-link tag="li" :class="$route.path.indexOf('search')!==-1? 'active':''" :to="{path:'/search',query:{geohash:`${geohash}`}}">
+      <router-link tag="li" :class="$route.path.indexOf('search')!==-1? 'active':''" :to="{path:'/search',query:{geohash:geohash}}">
         <span>
           <i class="iconfont icon-sousuo"></i>
         </span>

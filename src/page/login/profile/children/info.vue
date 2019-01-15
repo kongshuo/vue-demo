@@ -60,7 +60,7 @@ export default {
     alertTip
   },
   methods: {
-    ...mapMutations(['SET_USERNAME']),
+    ...mapMutations(['SET_USERNAME', 'LOGOUT']),
     exit () {
       this.showAlertTip = true
     },
@@ -68,6 +68,7 @@ export default {
       this.showAlertTip = false
       localStorage.removeStorage('user_id')
       this.SET_USERNAME('')
+      this.LOGOUT()
       this.$router.go(-1)
     }
   }

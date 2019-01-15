@@ -5,7 +5,7 @@
       <a href="javascript:;" class="go-back" v-if="isGoBack" @click="$router.go(-1)">
         <i class="iconfont icon-fanhui"></i>
       </a>
-      <section class="head-title" v-if="headTitle">
+      <section class="head-title" v-if="headTitle" @click="callback">
         <span class="ellipsis">{{headTitle}}</span>
       </section>
       <slot name="rightContent"></slot>
@@ -18,7 +18,13 @@ export default {
    * isGoBack:boolean,是否显示返回标识
    * headTitle:string,头部显示标题
    */
-  props: ['isGoBack', 'headTitle']
+  props: ['isGoBack', 'headTitle'],
+  methods: {
+    // 显示地址时，可以返回地址选择
+    callback () {
+      this.$emit('callback')
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -102,5 +102,11 @@ export default {
       '/api/member/v1/users/' + params.id + '/delivery_card/physical_card/bind',
       { number: params.number, password: params.password }
     )
+  },
+  /**
+   *根据经纬度获取地址
+   */
+  getGeohashAddress (params) {
+    return commonApi.get('/api/v2/pois/' + params.geohash)
   }
 }

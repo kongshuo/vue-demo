@@ -40,6 +40,7 @@ import headTop from '@/components/header/header'
 import homeApi from '@/service/homeApi'
 import localStorageApi from '@/config/localStore'
 import alertTip from '@/components/common/alertTip'
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
@@ -56,6 +57,7 @@ export default {
     alertTip
   },
   methods: {
+    ...mapMutations(['SAVE_GEOHASH']),
     // 获取所选城市接口
     getCity () {
       let cityId = this.$route.query.cityId
@@ -99,7 +101,8 @@ export default {
         this.searchHistoryList.push(item)
       }
       localStorageApi.setStorage('placeHistroy', this.searchHistoryList)
-      this.$router.push({path: '/smite'})
+      this.SAVE_GEOHASH(item.geohash)
+      this.$router.push({path: '/msite', query: {geohash: item.geohash}})
     },
     // 清空所有
     clearAll () {

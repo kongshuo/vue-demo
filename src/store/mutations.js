@@ -25,5 +25,11 @@ export default {
   },
   [types.SAVE_QUESTIONS] (state, questionList) {
     state.questions = { ...questionList }
+  },
+  [types.LOGOUT] (state) {
+    state.isLogin = false
+  },
+  [types.SAVE_GEOHASH] (state, geohash) {
+    state.geohash = geohash
   }
 }
