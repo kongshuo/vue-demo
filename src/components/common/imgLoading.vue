@@ -40,8 +40,9 @@ export default {
 .img-loading{
   position: fixed;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   top: 90px;
+  bottom: 90px;
   z-index: 1000;
 }
 .loading{
