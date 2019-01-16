@@ -48,7 +48,7 @@ export default {
    * 新增收获地址
    */
   newHaveAddress (params) {
-    return commonApi.post('/api/v1/users/' + params.userId + '/addresses', {
+    let data = {
       address: params.address,
       address_detail: params.address_detail,
       geohash: params.geohash,
@@ -59,7 +59,8 @@ export default {
       sex: 1,
       tag: '公司',
       tag_type: 4
-    })
+    }
+    return commonApi.post('/api/v1/users/' + params.userId + '/addresses', data)
   },
   /**
    * 获取我的优惠中的红包数量
@@ -118,5 +119,29 @@ export default {
       group_type: '1',
       'flags[]': 'F'
     })
+  },
+  /**
+   *获取定位附近商家列表
+   */
+  getShopList (params) {
+    let supportStr = ''
+    params.support_ids.forEach(item => {
+      if (item.status) {
+        supportStr += '&support_ids[]=' + item.id
+      }
+    })
+    let data = {
+      latitude: params.latitude,
+      longitude: params.longitude,
+      offset: params.offset,
+      limit: '20',
+      'extras[]': 'activities',
+      keyword: '',
+      restaurant_category_id: params.restaurant_category_id,
+      'restaurant_category_ids[]': params.restaurant_category_ids,
+      order_by: params.order_by,
+      'delivery_mode[]': params.delivery_mode + supportStr
+    }
+    return commonApi.get('api/shopping/restaurants', data)
   }
 }
