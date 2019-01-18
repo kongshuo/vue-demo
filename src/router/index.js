@@ -241,6 +241,15 @@ const useCard = r =>
  */
 const buyRecord = r =>
   require.ensure([], () => r(require('../page/vipCard/buyRecord')), 'buyRecord')
+/**
+ * foodtypeList/foodtypeList
+ */
+const foodtypeList = r =>
+  require.ensure(
+    [],
+    () => r(require('../page/foodtypeList/foodtypeList')),
+    'foodtypeList'
+  )
 export default [
   {
     path: '',
@@ -423,5 +432,10 @@ export default [
     path: '/buyRecord',
     component: buyRecord,
     name: 'buyRecord'
+  },
+  {
+    path: '/foodtypeList',
+    component: foodtypeList,
+    name: 'foodtypeList'
   }
 ]

@@ -143,5 +143,18 @@ export default {
       'delivery_mode[]': params.delivery_mode + supportStr
     }
     return commonApi.get('api/shopping/restaurants', data)
+  },
+  // 获取配送方式数据
+  getFoodDelivery (params) {
+    let data = Object.assign({}, params, { kw: '' })
+    return commonApi.get('/api/shopping/v1/restaurants/delivery_modes', data)
+  },
+  // 获取商家属性数据
+  getActivityAttr (params) {
+    let data = Object.assign({}, params, { kw: '' })
+    return commonApi.get(
+      '/api/shopping/v1/restaurants/activity_attributes',
+      data
+    )
   }
 }
