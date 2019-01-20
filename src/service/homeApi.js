@@ -156,5 +156,9 @@ export default {
       '/api/shopping/v1/restaurants/activity_attributes',
       data
     )
+  },
+  // 获取全部商品分类
+  getCategory (params) {
+    return commonApi.get('/api/shopping/v2/restaurant/category', params)
   }
 }

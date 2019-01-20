@@ -41,11 +41,18 @@ export default {
   /**
    *  geohash:当前定位的经纬度
    *  sortType：排序方式，number类型
+   *  deliveryMode:已经选择的配送方式, 未选择未null
+   *  chooseStatus:判断筛选中的确定按钮是否被点击
+   *  supportIds:商家已选的属性的id列表
    */
-  props: ['geohash', 'sortType'],
+  props: ['geohash', 'sortType', 'deliveryMode', 'chooseStatus', 'supportIds'],
   watch: {
     // 监听排序方式
     sortType: function (newVal) {
+      this.getShopList()
+    },
+    // 监听筛选中的确定按钮
+    chooseStatus: function (newVal) {
       this.getShopList()
     }
   },
@@ -53,7 +60,6 @@ export default {
     getShopList () {
       let latitude = this.geohash.split(',')[0]
       let longitude = this.geohash.split(',')[1]
-      // console.log(latitude)
       let params = {
         latitude: latitude,
         longitude: longitude,
@@ -61,8 +67,8 @@ export default {
         restaurant_category_id: '',
         restaurant_category_ids: '',
         order_by: this.sortType ? this.sortType : '',
-        delivery_mode: '',
-        support_ids: []
+        delivery_mode: this.deliveryMode,
+        support_ids: this.supportIds ? this.supportIds : []
       }
       homeApi.getShopList(params).then(res => {
         this.shopList = [...res.data]

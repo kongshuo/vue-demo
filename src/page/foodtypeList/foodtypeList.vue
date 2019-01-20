@@ -5,6 +5,28 @@
       <!-- 分类 -->
       <section :class="{openList:byType ==='food'}">
         <h2 @click="choose('food')">分类<i class="iconfont icon-sanjiao_xia"></i></h2>
+        <transition name="showlist">
+          <section class="category-box">
+            <section class="category-left">
+              <ul>
+                <li v-for="(item,index) of categoryList" :key="item.id">
+                    <a href="javascript:;" v-if="index===0">
+                      <span>{{item.name}}</span>
+                      <span>{{item.count}}</span>
+                    </a>
+                    <a href="javascript:;" v-else>
+                      <img :src="getImgPath(item.image_url)" alt="">
+                      <span>{{item.name}}</span>
+                      <i class="iconfont icon-jinru"></i>
+                      <span>{{item.count}}</span>
+                    </a>
+                </li>
+              </ul>
+            </section>
+            <section class="category-right">
+            </section>
+          </section>
+        </transition>
       </section>
       <!-- 排序 -->
       <section :class="{openList:byType==='sort'}">
@@ -62,20 +84,19 @@
             <section class="choose-title">
               <p class="activity-title">商家属性(可以多选)</p>
               <ul>
-
-                <li v-for="(item,index) of activityArr" :key="item.id"><span :class="{ischoose:activityAttrType[index]}" @click="activityArrChoose(index)"><i class="iconfont icon-xuanze"></i>{{item.name}}</span></li>
+                <li v-for="(item,index) of activityArr" :key="item.id"><span :class="{ischoose:supportIds[index].status}" @click="activityArrChoose(index,item.id)"><i class="iconfont icon-xuanze"></i>{{item.name}}</span></li>
               </ul>
             </section>
             <section class="choose-btn">
               <button @click="clean">清空</button>
-              <button>确定</button>
+              <button @click="confirm">确定<span v-show="chooseNum">({{chooseNum}})</span></button>
             </section>
           </section>
         </transition>
       </section>
     </section>
     <section class="flex1">
-      <shop-list :geohash="geohash" :sortType="sortType"></shop-list>
+      <shop-list :geohash="geohash" :sortType="sortType" :deliveryMode="chooseDeliveryType" :chooseStatus="chooseStatus" :supportIds="supportIds"></shop-list>
     </section>
   </section>
 </template>
@@ -83,6 +104,7 @@
 import headTop from '@/components/header/header'
 import shopList from '@/components/common/shopList'
 import homeApi from '@/service/homeApi'
+import {getImgPath} from '@/config/mixins'
 export default {
   data () {
     return {
@@ -91,22 +113,35 @@ export default {
       sortType: '', // 排序方式
       geohash: '', // 当前定位经纬度
       foodDelivery: [], // 筛选功能中的配送方式列表
-      chooseDeliveryType: 0, // 标记已选择的配送方式
+      chooseDeliveryType: null, // 标记已选择的配送方式
       chooseDeliveryTypeCopy: null, //  每次清空已选择的配送方式之前先储存
-      activityAttrType: [], // 商家属性是否已经选择列表
+      // activityAttrType: [], // 判断商家属性是否已经选择列表
+      supportIds: [], // 商家属性已经选择列表的id值
+      supportIdsCopy: [], //  每次清空已选择的商家属性之前先储存
       activityArr: [], // 商家属性列表
-      activityAttrTypeCopy: [] // 每次清空已选择的商家属性之前先储存
+      activityAttrTypeCopy: [], // 每次清空已选择的商家属性之前先储存
+      chooseNum: 0, // 筛选中已选择的个数
+      chooseStatus: false, // 确定按钮的状态
+      categoryList: [] // 所有商品分类列表
     }
   },
   components: {
     headTop,
     shopList
   },
+  mixins: [getImgPath],
   methods: {
     // 获取url参数
     getParams () {
       this.headTitle = this.$route.query.title
       this.geohash = this.$route.query.geohash
+    },
+    // 获取商品分类左侧数据
+    getCategory () {
+      let params = {latitude: this.geohash.split(',')[0], longitude: this.geohash.split(',')[1]}
+      homeApi.getCategory(params).then(res => {
+        this.categoryList = res.data
+      })
     },
     // 选择
     choose (chooseType) {
@@ -171,43 +206,64 @@ export default {
       let params = {latitude: this.geohash.split(',')[0], longitude: this.geohash.split(',')[1]}
       homeApi.getActivityAttr(params).then(res => {
         this.activityArr = res.data
-        res.data.forEach(item => { // 设置默认商家属性都为未选择
-          this.activityAttrType.push(false)
+        res.data.forEach((item, index) => { // 设置默认商家属性都为未选择
+          this.supportIds[index] = {status: false, id: item.id}
         })
       })
     },
     // 选择配送方式
     deliveryChoose (id) {
       if (this.chooseDeliveryType === id) {
-        this.chooseDeliveryType = 0 // 如果已经有选择的,并且再次点击时,取消选择
+        this.chooseNum -= 1
+        this.chooseDeliveryType = null // 如果已经有选择的,并且再次点击时,取消选择
       } else {
         this.chooseDeliveryType = id
+        this.chooseNum += 1
       }
     },
     // 选择商家属性(可多选)
-    activityArrChoose (index) {
-      // this.activityAttrType[index] = !this.activityAttrType[index]
-      this.$set(this.activityAttrType, index, !this.activityAttrType[index]) // vue中的对象和数组通过key或index修改或增加值时,不会触发视图的更新
+    activityArrChoose (index, id) {
+      if (this.supportIds[index].status) {
+        this.chooseNum -= 1
+        this.supportIds.splice(index, 1, {status: false, id})
+        let flag = this.supportIds.some(item => {
+          return item.status
+        })
+        if (!flag) {
+          if (this.chooseDeliveryType !== null) {
+            this.chooseNum = 1
+          } else {
+            this.chooseNum = 0
+          }
+        }
+      } else {
+        this.chooseNum += 1
+        this.supportIds.splice(index, 1, {status: true, id})
+      }
     },
     // 清空
     clean () {
+      this.chooseNum = 0
       this.chooseDeliveryTypeCopy = this.chooseDeliveryType
-      this.chooseDeliveryType = 0
-      this.activityAttrTypeCopy = this.activityAttrType.map(item => {
+      this.supportIdsCopy = this.supportIds.map(item => {
         return item
       })
-      this.activityAttrType = this.activityAttrType.map(item => {
-        if (item) {
-          item = false
-        }
-        return item
+      this.chooseDeliveryType = null
+      this.supportIds.forEach(item => {
+        item.status = false
       })
+    },
+    // 确定
+    confirm () {
+      this.chooseStatus = !this.chooseStatus
+      this.byType = ''
     }
   },
   created () {
     this.getParams()
     this.getFoodDelivery()
     this.getActivityAttr()
+    this.getCategory()
   }
 }
 </script>
@@ -242,6 +298,62 @@ export default {
       transform: rotate(180deg);
       color: #3190e8;
       margin-top: -10px;
+    }
+  }
+}
+.category-box{
+  position: absolute;
+  top: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  background: #fff;
+}
+.category-left,.category-right{
+  flex:1;
+}
+.category-left{
+  background: #f1f1f1;
+  li{
+    a{
+      display: block;
+      height: 80px;
+      line-height: 80px;
+      padding: 0 30px;
+      img{
+        width: 40px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+      i{
+        float: right;
+        color: #999;
+      }
+      span:nth-of-type(1){
+        display: inline-block;
+        color: #666;
+        font-size: 28px;
+        vertical-align: middle;
+      }
+      span:nth-of-type(2){
+        float: right;
+        line-height: 40px;
+        margin: 20px 20px 0 0;
+        padding: 0 10px;
+        border-radius: 100%;
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+        background: #ccc;
+      }
+    }
+  }
+  li:nth-of-type(1){
+    a{
+      span{
+        border-radius: 20px;
+      }
     }
   }
 }
@@ -338,6 +450,10 @@ export default {
     border-radius: 10px;
     font-size: 32px;
     text-align: center;
+    span{
+      color: #fff;
+      font-weight: bold;
+    }
   }
   button:first-child{
     margin-right: 2%;
