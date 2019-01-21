@@ -160,5 +160,14 @@ export default {
   // 获取全部商品分类
   getCategory (params) {
     return commonApi.get('/api/shopping/v2/restaurant/category', params)
+  },
+  // 获取shop页面商铺详情
+  getShopDetail (params) {
+    return commonApi.get('/api/shopping/restaurant/' + params.shopid, {
+      latitude: params.latitude,
+      longitude:
+        params.longitude +
+        '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
+    })
   }
 }

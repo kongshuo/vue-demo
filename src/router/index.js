@@ -250,6 +250,17 @@ const foodtypeList = r =>
     () => r(require('../page/foodtypeList/foodtypeList')),
     'foodtypeList'
   )
+/**
+ * shop/shop
+ */
+const shop = r =>
+  require.ensure([], () => r(require('../page/shop/shop')), 'shop')
+/**
+ * shop/shopDetail
+ */
+const shopDetail = r =>
+  require.ensure([], () => r(require('../page/shop/shopDetail')), 'shopDetail')
+
 export default [
   {
     path: '',
@@ -437,5 +448,15 @@ export default [
     path: '/foodtypeList',
     component: foodtypeList,
     name: 'foodtypeList'
+  },
+  {
+    path: '/shop',
+    component: shop,
+    name: 'shop'
+  },
+  {
+    path: '/shopDetail',
+    component: shopDetail,
+    name: 'shopDetail'
   }
 ]

@@ -1,7 +1,7 @@
 <template>
   <div class="product-list">
     <ul>
-      <li v-for="item of shopList" :key="item.id">
+      <li v-for="item of shopList" :key="item.id" @click="gotoShop(item.name,item.id)">
         <img :src="baseUrl + item.image_path" alt="">
         <section class="product-content">
           <h3>
@@ -91,6 +91,9 @@ export default {
         zhunStatus = false
       }
       return zhunStatus
+    },
+    gotoShop (name, id) {
+      this.$router.push({path: '/shop', query: {geohash: this.geohash, title: name, id: id}})
     }
   },
   mounted () {
