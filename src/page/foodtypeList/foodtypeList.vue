@@ -4,12 +4,12 @@
     <section class="select-box">
       <!-- 分类 -->
       <section :class="{openList:byType ==='food'}">
-        <h2 @click="choose('food')">分类<i class="iconfont icon-sanjiao_xia"></i></h2>
+        <h2 @click="choose('food')">{{foodTitle}}<i class="iconfont icon-sanjiao_xia"></i></h2>
         <transition name="showlist">
-          <section class="category-box">
+          <section class="category-box" v-show="byType==='food'">
             <section class="category-left">
               <ul>
-                <li v-for="(item,index) of categoryList" :key="item.id">
+                <li v-for="(item,index) of categoryList" :key="item.id" :class="{showDetail:item.id === Number(restaurant_category_id) }" @click="tabChildrenMenu(item.id,index)">
                     <a href="javascript:;" v-if="index===0">
                       <span>{{item.name}}</span>
                       <span>{{item.count}}</span>
@@ -24,6 +24,12 @@
               </ul>
             </section>
             <section class="category-right">
+              <ul>
+                <li v-for="(item,index) of categoryDetailList" :key="item.id" v-show="index>0" @click="getDetail(item.id,item.name)">
+                  <span>{{item.name}}</span>
+                  <span>{{item.count}}</span>
+                </li>
+              </ul>
             </section>
           </section>
         </transition>
@@ -96,7 +102,7 @@
       </section>
     </section>
     <section class="flex1">
-      <shop-list :geohash="geohash" :sortType="sortType" :deliveryMode="chooseDeliveryType" :chooseStatus="chooseStatus" :supportIds="supportIds"></shop-list>
+      <shop-list :geohash="geohash" :sortType="sortType" :deliveryMode="chooseDeliveryType" :chooseStatus="chooseStatus" :supportIds="supportIds" :restaurantCategoryId="restaurant_category_id" :restaurantCategoryIds="restaurant_category_ids"></shop-list>
     </section>
   </section>
 </template>
@@ -122,7 +128,11 @@ export default {
       activityAttrTypeCopy: [], // 每次清空已选择的商家属性之前先储存
       chooseNum: 0, // 筛选中已选择的个数
       chooseStatus: false, // 确定按钮的状态
-      categoryList: [] // 所有商品分类列表
+      categoryList: [], // 所有商品分类列表
+      categoryDetailList: [], // 所有商品分类子列表
+      restaurant_category_id: null, // 默认的商品分类
+      restaurant_category_ids: null,
+      foodTitle: '分类' // 分类默认标题
     }
   },
   components: {
@@ -134,23 +144,55 @@ export default {
     // 获取url参数
     getParams () {
       this.headTitle = this.$route.query.title
+      this.foodTitle = this.$route.query.title
       this.geohash = this.$route.query.geohash
+      this.restaurant_category_id = this.$route.query.restaurant_category_id
     },
-    // 获取商品分类左侧数据
+    // 获取商品分类左侧数据和对应的右侧数据
     getCategory () {
       let params = {latitude: this.geohash.split(',')[0], longitude: this.geohash.split(',')[1]}
       homeApi.getCategory(params).then(res => {
         this.categoryList = res.data
+        // 获取默认的右侧数据
+        res.data.forEach(item => {
+          if (this.restaurant_category_id) { // restaurant_category_id可以是undefined
+            if (item.id === Number(this.restaurant_category_id)) {
+              this.categoryDetailList = item.sub_categories
+            }
+          } else {
+            this.categoryDetailList = []
+          }
+        })
       })
+    },
+    // 切换右侧数据列表
+    tabChildrenMenu (id, index) {
+      this.restaurant_category_id = id
+      if (index === 0) {
+        this.foodTitle = '分类'
+        this.byType = ''
+      } else {
+        this.getCategory()
+      }
+    },
+    getDetail (id, name) {
+      this.restaurant_category_ids = id
+      this.byType = ''
+      this.headTitle = this.foodTitle = name
     },
     // 选择
     choose (chooseType) {
       /** 选中状态下的选项再次选择时回归初始状态 */
       if (this.byType === chooseType) {
+        if (this.byType === 'food') {
+          this.foodTitle = this.headTitle
+        }
         this.byType = ''
       } else {
         if (chooseType === 'food') {
           this.byType = 'food'
+          this.foodTitle = '分类'
+          this.getCategory()
         } else if (chooseType === 'sort') {
           this.byType = 'sort'
         } else {
@@ -263,7 +305,6 @@ export default {
     this.getParams()
     this.getFoodDelivery()
     this.getActivityAttr()
-    this.getCategory()
   }
 }
 </script>
@@ -312,6 +353,8 @@ export default {
 }
 .category-left,.category-right{
   flex:1;
+  height: 725px;
+  overflow-y: auto;
 }
 .category-left{
   background: #f1f1f1;
@@ -353,6 +396,28 @@ export default {
     a{
       span{
         border-radius: 20px;
+      }
+    }
+  }
+  .showDetail{
+    a{
+      background: #fff;
+    }
+  }
+}
+.category-right{
+  ul{
+    padding: 0 20px;
+    li{
+      height: 80px;
+      line-height: 79px;
+      border-bottom: 1px solid #e4e4e4;/*no*/
+      span{
+        color: #666;
+        font-size: 28px;
+      }
+      span:nth-of-type(2){
+        float: right;
       }
     }
   }

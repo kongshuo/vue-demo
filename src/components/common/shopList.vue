@@ -44,8 +44,10 @@ export default {
    *  deliveryMode:已经选择的配送方式, 未选择未null
    *  chooseStatus:判断筛选中的确定按钮是否被点击
    *  supportIds:商家已选的属性的id列表
+   *  restaurantCategoryId:主菜单menu分类id
+   *  restaurantCategoryIds：子菜单menu分类id
    */
-  props: ['geohash', 'sortType', 'deliveryMode', 'chooseStatus', 'supportIds'],
+  props: ['geohash', 'sortType', 'deliveryMode', 'chooseStatus', 'supportIds', 'restaurantCategoryId', 'restaurantCategoryIds'],
   watch: {
     // 监听排序方式
     sortType: function (newVal) {
@@ -53,6 +55,9 @@ export default {
     },
     // 监听筛选中的确定按钮
     chooseStatus: function (newVal) {
+      this.getShopList()
+    },
+    restaurantCategoryIds: function (newVal) {
       this.getShopList()
     }
   },
@@ -64,8 +69,8 @@ export default {
         latitude: latitude,
         longitude: longitude,
         offset: 0,
-        restaurant_category_id: '',
-        restaurant_category_ids: '',
+        restaurant_category_id: this.restaurantCategoryId,
+        restaurant_category_ids: this.restaurantCategoryIds,
         order_by: this.sortType ? this.sortType : '',
         delivery_mode: this.deliveryMode,
         support_ids: this.supportIds ? this.supportIds : []
