@@ -169,5 +169,9 @@ export default {
         params.longitude +
         '&extras[]=activities&extras[]=album&extras[]=license&extras[]=identification&extras[]=statistics'
     })
+  },
+  // 获取食品列表
+  getFoodList (params) {
+    return commonApi.get('/api/shopping/v2/menu', params)
   }
 }

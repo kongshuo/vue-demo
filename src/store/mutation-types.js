@@ -7,3 +7,4 @@ export const AFTER_ADDRESS = 'AFTER_ADDRESS' // 已经添加到列表的收获�
 export const SAVE_QUESTIONS = 'SAVE_QUESTIONS' // 服务中心问题
 export const LOGOUT = 'LOGOUT' // 退出登录
 export const SAVE_GEOHASH = 'SAVE_GEOHASH' // 保存位置经纬度
+export const FOODS_NUM = 'FOODS_NUM' // 商品数量

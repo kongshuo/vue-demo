@@ -24,6 +24,55 @@
       <div><a href="javascript:;" :class="{active:options==='2'}" @click="tab('2')">评价</a></div>
     </section>
     <section class="goods">
+      <div class="left-nav">
+        <ul>
+          <li v-for="item of foodList" :key="item.id" :class="{active:defaultActive===item.id}" @click="navTab(item.id)">
+            <img :src="getImgPath(item.icon_url)" alt="">
+            <span>{{item.name}}</span>
+            <b v-if="item.categoryNum">{{item.categoryNum}}</b>
+          </li>
+        </ul>
+      </div>
+      <div class="right-list">
+        <ul>
+          <li v-for="(item,index) of foodList" :key="index">
+            <h3>
+              {{item.name}}
+              <span>{{item.description}}</span>
+            </h3>
+            <section class="typefood-list">
+              <ul>
+                <li v-for="(val,order) of item.foods" :key="order">
+                  <div class="img-left-box">
+                    <img :src="imgBaseUrl + val.image_path" alt="">
+                  </div>
+                  <div class="food-detail">
+                    <h4 class="ellipsis"><span>{{val.name}}</span></h4>
+                    <p class="food-introdeuce">{{val.description}}</p>
+                    <p class="describe">
+                      <span>月售{{val.month_sales}}份</span>
+                      <span>好评率{{val.satisfy_rate}}%</span>
+                    </p>
+                    <div class="price-box">
+                      <div class="one-price">￥{{val.specfoods[0].price}}</div>
+                      <div class="change-count">
+                          <i class="iconfont icon-jian" @click="reduce(item.id,val.item_id,val.specfoods[0].price)" v-if="val.foodNum"></i>
+                          <span>{{val.foodNum ? val.foodNum : ''}}</span>
+                          <i class="iconfont icon-jia" @click="increase(item.id,val.item_id,val.specfoods[0].price)"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="foodlabelbox" v-if="val.attributes.length > 0" >
+                    <span v-for="(attribute,attrIndex) of val.attributes" :key="attrIndex" :class="{foodlabel:attribute.icon_name === '新',foodlabel2:attribute.icon_name === '招牌'}">
+                      <i>{{attribute.icon_name === '新'? '新品':attribute.icon_name}}</i>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </li>
+        </ul>
+      </div>
       <buy-cart></buy-cart>
     </section>
   </section>
@@ -33,6 +82,8 @@ import headTop from '@/components/header/header'
 import buyCart from '@/components/common/buyCart'
 import homeApi from '@/service/homeApi'
 import {imgBaseUrl} from '@/config/env'
+import {getImgPath} from '@/config/mixins'
+import {mapState, mapMutations} from 'vuex'
 export default {
   data () {
     return {
@@ -45,14 +96,21 @@ export default {
         name: '',
         activities: [{icon_name: ''}]
       },
-      options: '1'// 显示商品列表或者评价列表,默认显示商品列表
+      options: '1', // 显示商品列表或者评价列表,默认显示商品列表
+      foodList: [], // 食品列表
+      defaultActive: null // 左侧导航默认选择
     }
   },
+  computed: mapState({
+    foodsNumObj: 'foodsNumObj'
+  }),
   components: {
     headTop,
     buyCart
   },
+  mixins: [getImgPath],
   methods: {
+    ...mapMutations(['FOODS_NUM']),
     // 获取url参数
     getUrlParams () {
       this.headTitle = this.$route.query.title
@@ -66,14 +124,63 @@ export default {
         this.shopDetailMessage = Object.assign({}, this.shopDetailMessage, res.data)
       })
     },
+    // 获取食品列表数据
+    getFoodList () {
+      let params = {restaurant_id: this.shopid}
+      homeApi.getFoodList(params).then(res => {
+        res.data.forEach((item, index) => {
+          item.categoryNum = 0 // 增加一个当前商品选择分类总数的字段
+          item.foods.forEach(val => { // 增加一个当前商品选择数量的字段
+            val.foodNum = 0
+          })
+        })
+        this.foodList = res.data
+        res.data.forEach((item, index) => {
+          if (index === 0) {
+            this.defaultActive = item.id
+          }
+        })
+      })
+    },
     // tab切换
     tab (type) {
       this.options = type
+    },
+    // 食品左侧导航
+    navTab (id) {
+      this.defaultActive = id
+    },
+    // 减少
+    reduce (parentId, childrenId, onePrice) {
+      this.foodList.forEach(item => {
+        if (item.id === parentId) {
+          item.categoryNum--
+        }
+        item.foods.forEach(val => {
+          if (val.item_id === childrenId) {
+            val.foodNum--
+          }
+        })
+      })
+    },
+    // 增加
+    increase (parentId, childrenId, onePrice) {
+      this.foodList.forEach(item => {
+        if (item.id === parentId) {
+          item.categoryNum++
+        }
+        item.foods.forEach(val => {
+          if (val.item_id === childrenId) {
+            val.foodNum++
+          }
+        })
+      })
     }
   },
   created () {
     this.getUrlParams()
     this.getShopDetailData()
+    this.getFoodList()
   }
 }
 </script>
@@ -151,6 +258,7 @@ export default {
   justify-content: space-between;
   padding: 10px 0 20px;
   height: 100px;
+  border-bottom: 1px solid #ebebeb;/*no*/
   div{
     flex:1;
     line-height: 70px;
@@ -167,8 +275,167 @@ export default {
   }
 }
 .goods{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   flex: 1;
   overflow: hidden;
   padding-bottom: 90px;
+}
+.left-nav{
+  flex: 1;
+  li{
+    position: relative;
+    padding: 40px 10px;
+    text-align: left;
+    border-left: 4px solid transparent;/*no*/
+    img{
+      width: 25px;
+    }
+    span{
+      font-size: 28px;
+      color: #666;
+    }
+    b{
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 100%;
+      font-size: 24px;
+      color: #fff;
+      text-align: center;
+      background: #ff461d
+    }
+  }
+  .active{
+    background: #fff;
+    border-color: #3190e8;
+    i,span{
+      font-weight: bold;
+    }
+  }
+}
+.right-list{
+  flex: 4;
+  overflow-y: auto;
+  ul{
+    >li{
+      h3{
+        padding: 20px;
+        height: 100px;
+        line-height: 60px;
+        font-size: 36px;
+        font-weight: bold;
+        color:#666;
+        span{
+          font-size: 28px;
+          color: #999;
+        }
+      }
+    }
+  }
+}
+.typefood-list{
+  li{
+    position: relative;
+    padding: 30px 20px;
+    overflow: hidden;
+  }
+  .img-left-box{
+    float: left;
+    img{
+      width: 90px;
+      height: 90px;
+    }
+  }
+}
+.food-detail{
+  padding-left: 110px;
+  h4{
+    padding-right: 60px;
+    margin-bottom: 10px;
+    line-height: 40px;
+    span:nth-of-type(1){
+      font-size: 32px;
+      color: #333;
+      font-weight: bold;
+    }
+    span:nth-of-type(2){
+      padding: 0 10px;
+      border: 1px solid #ff461d;/*no*/
+      border-radius: 20px;
+      font-size: 20px;
+      color: #ff461d;
+    }
+  }
+  .food-introdeuce{
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #999;
+  }
+  .describe{
+    margin-bottom: 20px;
+    span{
+      margin-right: 5px;
+      font-size: 24px;
+      color: #333;
+    }
+  }
+}
+.price-box{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  .one-price{
+    flex: 1;
+    font-size: 36px;
+    color: #f60;
+    font-weight: bold;
+  }
+  .change-count{
+    flex: 5;
+    text-align: right;
+    i{
+      font-size: 40px;
+      font-weight: bold;
+      color: #3190e8
+    }
+    span{
+      font-size: 36px;
+      color: #666;
+    }
+  }
+}
+.foodlabel{
+  position: absolute;
+  left: -45px;
+  top: -45px;
+  z-index: 1;
+  width: 90px;
+  height:90px;
+  text-align: center;
+  line-height: 140px;
+  transform: rotate(-45deg);
+  background: #4cd964;
+  i{
+    font-size: 20px;
+    color: #fff;
+  }
+}
+.foodlabel2{
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  z-index: 1;
+  padding: 0 0.133333rem;
+  border: 1px solid #ff461d;
+  border-radius: 0.266667rem;
+  i{
+    font-size: 0.266667rem;
+    color: #ff461d;
+  }
 }
 </style>
