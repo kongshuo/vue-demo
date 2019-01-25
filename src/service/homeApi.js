@@ -173,5 +173,30 @@ export default {
   // 获取食品列表
   getFoodList (params) {
     return commonApi.get('/api/shopping/v2/menu', params)
+  },
+  // 获取商铺评价分数
+  getRatingScores (params) {
+    return commonApi.get(
+      '/api/ugc/v2/restaurants/' + params.shopid + '/ratings/scores'
+    )
+  },
+  // 获取商铺评价分类
+  getRatingTags (params) {
+    return commonApi.get(
+      '/api/ugc/v2/restaurants/' + params.shopid + '/ratings/tags'
+    )
+  },
+  // 获取商铺评价列表
+  getRatingList (params) {
+    let data = {
+      has_content: true,
+      tag_name: params.name,
+      offset: 0,
+      limit: 10
+    }
+    return commonApi.get(
+      '/api/ugc/v2/restaurants/' + params.shopid + '/ratings',
+      data
+    )
   }
 }

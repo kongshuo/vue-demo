@@ -260,6 +260,11 @@ const shop = r =>
  */
 const shopDetail = r =>
   require.ensure([], () => r(require('../page/shop/shopDetail')), 'shopDetail')
+/**
+ * shop/foodDetail
+ */
+const foodDetail = r =>
+  require.ensure([], () => r(require('../page/shop/foodDetail')), 'foodDetail')
 
 export default [
   {
@@ -458,5 +463,10 @@ export default [
     path: '/shopDetail',
     component: shopDetail,
     name: 'shopDetail'
+  },
+  {
+    path: '/foodDetail',
+    component: foodDetail,
+    name: 'foodDetail'
   }
 ]
