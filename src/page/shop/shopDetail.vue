@@ -62,7 +62,6 @@ export default {
       let params = {shopid: this.shopId, latitude: this.latitude, longitude: this.longitude}
       homeApi.getShopDetail(params).then(res => {
         this.shopDetail = res.data
-        console.log(res.data)
       })
     }
   },
