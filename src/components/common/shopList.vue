@@ -24,19 +24,25 @@
         </section>
       </li>
     </ul>
+    <img-loading :isLoading="isLoading"></img-loading>
   </div>
 </template>
 <script>
 import {imgBaseUrl} from '@/config/env'
 import homeApi from '@/service/homeApi'
+import imgLoading from '@/components/common/imgLoading'
 export default {
   data () {
     return {
       headTitle: '',
       foodTypes: [], // 食品分类列表，二维数组
       shopList: [], // 商家列表
-      baseUrl: imgBaseUrl // 公共路径
+      baseUrl: imgBaseUrl, // 公共路径
+      isLoading: true
     }
+  },
+  components: {
+    imgLoading
   },
   /**
    *  geohash:当前定位的经纬度
@@ -77,6 +83,7 @@ export default {
       }
       homeApi.getShopList(params).then(res => {
         this.shopList = [...res.data]
+        this.isLoading = false
       })
     },
     zhunshi (supports) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="img-loading">
+  <div class="img-loading" v-if="isLoading">
     <div class="loading" :style="{backgroundPositionY:-positionY+'px'}"></div>
     <div class="shadow-circle"></div>
   </div>
@@ -12,6 +12,7 @@ export default {
       timer: null
     }
   },
+  props: ['isLoading'],
   mounted () {
     this.timer = setInterval(() => {
       if (this.positionY === 600) {

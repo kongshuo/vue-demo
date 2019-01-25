@@ -32,7 +32,7 @@ export default {
   [types.SAVE_GEOHASH] (state, geohash) {
     state.geohash = geohash
   },
-  [types.FOODS_NUM] (state, obj) {
-    state.foodsNumObj = { ...state.foodsNumObj, ...obj }
+  [types.FOODS_NUM] (state, list) {
+    state.foodsList = list
   }
 }

@@ -24,18 +24,18 @@
       <div><a href="javascript:;" :class="{active:options==='2'}" @click="tab('2')">评价</a></div>
     </section>
     <section class="goods">
-      <div class="left-nav">
+      <div class="left-nav" ref="left">
         <ul>
-          <li v-for="item of foodList" :key="item.id" :class="{active:defaultActive===item.id}" @click="navTab(item.id)">
+          <li v-for="(item,index) of foodList" :key="item.id" :class="{active:index===currentIndex}" @click="navTab(index,$event)">
             <img :src="getImgPath(item.icon_url)" alt="">
             <span>{{item.name}}</span>
             <b v-if="item.categoryNum">{{item.categoryNum}}</b>
           </li>
         </ul>
       </div>
-      <div class="right-list">
+      <div class="right-list" ref="right">
         <ul>
-          <li v-for="(item,index) of foodList" :key="index">
+          <li v-for="(item,index) of foodList" :key="index" class="right-item">
             <h3>
               {{item.name}}
               <span>{{item.description}}</span>
@@ -73,17 +73,20 @@
           </li>
         </ul>
       </div>
-      <buy-cart></buy-cart>
+      <buy-cart :buyCartNum.sync="buyCartNum" :buyCartPrice.sync="buyCartPrice" :deliveryFee="deliveryFee" :minimumOrderAmount="minimumOrderAmount" @reduce="reduce" @increase="increase"></buy-cart>
     </section>
+    <img-loading :isLoading="isLoading"></img-loading>
   </section>
 </template>
 <script>
 import headTop from '@/components/header/header'
 import buyCart from '@/components/common/buyCart'
+import imgLoading from '@/components/common/imgLoading'
 import homeApi from '@/service/homeApi'
 import {imgBaseUrl} from '@/config/env'
 import {getImgPath} from '@/config/mixins'
-import {mapState, mapMutations} from 'vuex'
+import {mapMutations} from 'vuex'
+import Bscroll from 'better-scroll'
 export default {
   data () {
     return {
@@ -91,6 +94,7 @@ export default {
       shopid: null,
       latitude: null,
       longitude: null,
+      isLoading: true,
       imgBaseUrl,
       shopDetailMessage: { // 这么写为了不报错，接口格式有问题
         name: '',
@@ -98,15 +102,56 @@ export default {
       },
       options: '1', // 显示商品列表或者评价列表,默认显示商品列表
       foodList: [], // 食品列表
-      defaultActive: null // 左侧导航默认选择
+      buyCartNum: 0, // 购物车总数量
+      buyCartPrice: 0, // 购物车总价格
+      lefts: null, // 左侧导航滚动实例
+      rights: null, // 右侧导航滚动实例
+      listHeight: [], // 右侧内容高度集合
+      scrollY: 0, // 实时获取当前Y轴的高度
+      clickEvent: false
+
     }
   },
-  computed: mapState({
-    foodsNumObj: 'foodsNumObj'
-  }),
+  computed: {
+    // 配送费
+    deliveryFee: function () {
+      if (this.shopDetailMessage) {
+        return this.shopDetailMessage.float_delivery_fee
+      } else {
+        return 0
+      }
+    },
+    // 差多少钱可以结算配送
+    minimumOrderAmount: function () {
+      if (this.shopDetailMessage) {
+        // 当购物车总数量，价格改变时,需要改变此值
+        return this.shopDetailMessage.float_minimum_order_amount - this.buyCartPrice
+      } else {
+        return 0
+      }
+    },
+    currentIndex () {
+      // 从0开始，因为this.listHeight的第一个值为0
+      for (let i = 0; i < this.listHeight.length; i++) {
+        let h1 = this.listHeight[i]
+        let h2 = this.listHeight[i + 1]
+        if (!h2) {
+          return i
+        } else {
+          if (this.scrollY >= h1 && this.scrollY < h2) {
+            return i
+          } else if (this.scrollY < h1) {
+            return i - 1
+          }
+        }
+      }
+      return 0
+    }
+  },
   components: {
     headTop,
-    buyCart
+    buyCart,
+    imgLoading
   },
   mixins: [getImgPath],
   methods: {
@@ -135,11 +180,7 @@ export default {
           })
         })
         this.foodList = res.data
-        res.data.forEach((item, index) => {
-          if (index === 0) {
-            this.defaultActive = item.id
-          }
-        })
+        this.isLoading = false
       })
     },
     // tab切换
@@ -147,8 +188,15 @@ export default {
       this.options = type
     },
     // 食品左侧导航
-    navTab (id) {
-      this.defaultActive = id
+    navTab (index, event) {
+      this.clickEvent = true
+      if (!event._constructed) {
+        return false
+      } else {
+        let rightItems = this.$refs.right.querySelectorAll('.right-item')
+        let el = rightItems[index]
+        this.rights.scrollToElement(el, 500)
+      }
     },
     // 减少
     reduce (parentId, childrenId, onePrice) {
@@ -159,6 +207,9 @@ export default {
         item.foods.forEach(val => {
           if (val.item_id === childrenId) {
             val.foodNum--
+            this.buyCartNum--
+            this.buyCartPrice -= onePrice
+            this.FOODS_NUM(this.foodList)
           }
         })
       })
@@ -172,15 +223,50 @@ export default {
         item.foods.forEach(val => {
           if (val.item_id === childrenId) {
             val.foodNum++
+            this.buyCartNum++
+            this.buyCartPrice += onePrice
+            this.FOODS_NUM(this.foodList)
           }
         })
       })
+    },
+    initScroll () {
+      this.lefts = new Bscroll(this.$refs.left, {
+        click: true
+      })
+      this.rights = new Bscroll(this.$refs.right, {
+        click: true,
+        probeType: 3 // 探针的效果实时获取滚动的高度
+      })
+      // 右侧滚动元素对象监听滚动条事件,实时获取当前位置pos.y,并储存给scrollY
+      this.rights.on('scroll', (pos) => {
+        this.scrollY = Math.abs(Math.round(pos.y))
+      })
+      this.rights.on('scrollStart', (pos) => {
+        this.getListHeight()
+      })
+    },
+    getListHeight () {
+      this.listHeight = []
+      let rightListItems = this.$refs.right.querySelectorAll('.right-item')
+      let initHeight = 0
+      this.listHeight.push(initHeight)
+      for (let i = 0; i < rightListItems.length; i++) {
+        let item = rightListItems[i]
+        initHeight += item.clientHeight
+        this.listHeight.push(initHeight)
+      }
     }
   },
   created () {
     this.getUrlParams()
     this.getShopDetailData()
     this.getFoodList()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.initScroll()
+    })
   }
 }
 </script>
@@ -275,6 +361,7 @@ export default {
   }
 }
 .goods{
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -283,7 +370,12 @@ export default {
   padding-bottom: 90px;
 }
 .left-nav{
-  flex: 1;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 100%;
   li{
     position: relative;
     padding: 40px 10px;
@@ -319,8 +411,14 @@ export default {
   }
 }
 .right-list{
-  flex: 4;
-  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding-left: 150px;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  overflow: hidden;
   ul{
     >li{
       h3{
