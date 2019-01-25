@@ -37,7 +37,7 @@
                  {{shopDetailMessage.promotion_info?shopDetailMessage.promotion_info:'暂无公告'}}
                </p>
             </div>
-            <a href="javascript:;" @click="isActivity=false" class="close-activity-page">
+            <a href="javascript:;" @click.stop="isActivity=false" class="close-activity-page">
               <i class="iconfont icon-close_icon"></i>
             </a>
           </section>
