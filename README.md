@@ -1,5 +1,5 @@
 # vue-elm
-<h1>此项目是临摹他人开源项目,只为学习理解vue的使用，原开源项目<a href="https://github.com/bailicangdu/vue2-elm" target="_blank">点击这里</a>
+<h1>此项目是临摹他人开源项目,原开源项目<a href="https://github.com/bailicangdu/vue2-elm" target="_blank">点击这里</a>
 </h1>
 <div>
 <b>注意：此项目只是模仿功能,实现方式有不同,例：</b>
